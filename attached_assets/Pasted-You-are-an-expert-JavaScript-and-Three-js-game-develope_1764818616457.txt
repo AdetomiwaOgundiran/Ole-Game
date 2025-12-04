@@ -1,0 +1,297 @@
+You are an expert JavaScript and Three.js game developer.
+
+Build a complete, playable 3D endless-runner style browser game using Three.js that runs in Replit. The game should be themed around Lagos, Nigeria and be called “Olè”.
+
+1. Tech + Setup
+
+Use JavaScript, HTML, CSS, and Three.js.
+
+Create a single-page app that runs in the browser.
+
+Include:
+
+A basic HTML page with a <canvas> for Three.js.
+
+A main script.js file that initializes the Three.js scene.
+
+Any supporting modules in separate JS files (if needed).
+
+The game must:
+
+Work in Replit within a standard web project.
+
+Resize gracefully when the browser window resizes (basic responsiveness).
+
+Use requestAnimationFrame for the main game loop.
+
+2. Game Concept & Theme
+
+Title: Olè
+
+Style: Endless runner in a Lagos marketplace street.
+
+Setting:
+
+The main “road” is a straight path that extends ahead of the player (infinite runner style).
+
+On both sides of the road, create low-poly market stalls, street vendors, and buildings to give the sense of a busy Lagos street.
+
+Add Lagos yellow buses (danfo) parked along the sides of the road or occasionally moving slowly in background lanes.
+
+Add scattered tires and crates along the road edges for visual variety.
+
+Art direction:
+
+Use simple low-poly shapes and basic colors (no need for high-res textures).
+
+Use warm, slightly saturated colors to give a vibrant Lagos atmosphere.
+
+Add an ambient light plus one directional light to simulate sunlight.
+
+3. Player Character
+
+The player controls a masked character (can be a simple 3D capsule, cube, or low-poly humanoid with a “mask” color or texture on the face).
+
+The character:
+
+Is always running forward automatically along the road.
+
+Starts in the center lane.
+
+Has basic run animation (even if just bobbing up-and-down or slight rotation while moving).
+
+Camera:
+
+Third-person chase camera positioned slightly behind and above the character.
+
+Camera should smoothly follow the player’s position.
+
+4. Movement & Controls
+
+The road should be divided into 3 lanes: left, center, right.
+
+The character should:
+
+Automatically move forward along the Z axis (or chosen axis).
+
+Be able to switch between lanes and perform jump/slide actions.
+
+Controls (keyboard):
+
+Up arrow / W = Jump
+
+Down arrow / S = Slide
+
+Left arrow / A = Move to lane on the left (if not already in the leftmost lane)
+
+Right arrow / D = Move to lane on the right (if not already in the rightmost lane)
+
+Movement behavior:
+
+Lane changes should be smooth (lerp to target X position).
+
+Jump:
+
+Short arc with gravity pulling the character back down.
+
+During jump, character can pass over low obstacles.
+
+Slide:
+
+Character lowers its height (scale Y down slightly or move hitbox down).
+
+During slide, character can pass under certain obstacles (like hanging wires).
+
+Include basic constraints (no leaving the 3-lane road).
+
+5. Collectible Items (Positive Items)
+
+The goal is to pick up valuable items:
+
+Types:
+
+Money (naira notes or coins)
+
+Phones
+
+Food items (e.g., bread, plantain, street snacks – can be simple colored boxes or low-poly meshes)
+
+Behavior:
+
+Items appear in lanes at various distances ahead.
+
+When the player collides with an item:
+
+Increment score.
+
+Play a simple visual effect (e.g., scale up then disappear) and/or sound (if simple audio is included).
+
+Remove the item from the scene.
+
+Scoring:
+
+Each item type can have different score values (e.g., Money = 10, Phone = 20, Food = 5).
+
+6. Obstacles (Negative Items)
+
+Add obstacles that the player must avoid:
+
+Obstacles include:
+
+Tires on the road.
+
+Thorns / spike strips on the ground.
+
+Electric wires hanging low across a lane (require sliding).
+
+Behavior:
+
+Obstacles are placed in lanes similarly to collectibles.
+
+The player must jump over low ground obstacles (tires, thorns) or slide under hanging wires.
+
+If the player collides with an obstacle:
+
+End the run (Game Over), OR
+
+Deduct health/lives (e.g., 3 hearts; on zero, game over).
+
+Implement simple collision detection between player and items/obstacles using bounding boxes (THREE.Box3).
+
+7. Level Design & Infinite Runner Logic
+
+Implement a continuous road made of segments:
+
+For example, create an array of road segments and recycle them.
+
+When a segment goes behind the player beyond a threshold, move it forward to extend the road.
+
+Spawn system:
+
+Randomly spawn collectibles and obstacles in upcoming segments.
+
+Ensure fairness: don’t create unavoidable patterns (e.g., full row of obstacles with no gaps).
+
+Difficulty curve:
+
+Gradually increase the forward speed of the player over time.
+
+Gradually increase the spawn rate of obstacles.
+
+Optionally, increase reward values slightly over time.
+
+8. UI & Game States
+
+Implement simple but clear UI using HTML overlayed on the canvas:
+
+Game States:
+
+MENU – Show the game title “Olè”, a short description (“Run through the streets of Lagos, collect valuables, and dodge danger!”), and a Start Game button.
+
+PLAYING – Game is running; display score and optionally distance.
+
+GAME OVER – Show final score, best score, and a Restart button.
+
+On-screen UI elements:
+
+Score: top-left or top-right corner.
+
+Best score (stored in localStorage) and updated when a new high score is achieved.
+
+Optional Lives/Health indicator (hearts or simple numbers).
+
+When the player collides with an obstacle and loses all health (or directly dies):
+
+Transition to GAME OVER state.
+
+Stop the forward movement.
+
+Display a “Game Over” overlay with buttons:
+
+“Play Again”
+
+“Back to Menu” (optional).
+
+9. Lagos Flavor & Atmosphere
+
+Give the game a distinct Lagos feel with simple visual and audio cues:
+
+Visual:
+
+Yellow buses (danfo): Add them as static or moving background objects.
+
+Market stalls with awnings, boxes of goods, colorful signage (just use textures or colored planes).
+
+Audio (optional but preferred if simple to implement):
+
+Background music that feels like upbeat Afrobeat (use a royalty-free sample or leave it as a placeholder with instructions where to plug in a sound file).
+
+Simple sound effects on:
+
+Item collection.
+
+Jump.
+
+Slide.
+
+Collision / game over.
+
+Performance:
+
+Optimize the scene by using simple geometries and reusing materials.
+
+Limit the number of active items and obstacles to keep FPS smooth.
+
+10. Code Organization & Comments
+
+Organize the code into logical parts:
+
+Initialization of scene, camera, renderer, lights.
+
+Player creation and controls.
+
+Road and environment setup.
+
+Item & obstacle spawning and management.
+
+Game loop and state management.
+
+Collision detection and responses.
+
+UI updates (score, game states).
+
+Use clear functions and classes where appropriate (e.g., Player, ObstacleManager, ItemManager).
+
+Add comments explaining:
+
+How to tweak speed, spawn rates, and difficulty.
+
+How to add or change item/obstacle types.
+
+How to adjust controls or camera behavior.
+
+11. Final Requirements
+
+The final output should be fully working code that:
+
+Runs in a standard Replit web project.
+
+Starts with a menu screen and lets the player start the game.
+
+Allows the player to:
+
+Auto-run forward.
+
+Move left/right between three lanes.
+
+Jump and slide to avoid obstacles.
+
+Collect items to increase score.
+
+Ends the run on collision with obstacles (according to the health rules) and shows a game over screen with restart capability.
+
+Make sure to:
+
+Handle window resizing and update the renderer/camera appropriately.
+
+Avoid external build tools (no webpack/Vite needed); keep it simple, just scripts and modules that work in the browser.
