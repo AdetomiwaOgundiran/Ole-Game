@@ -1056,10 +1056,8 @@ function setupEventListeners() {
     document.addEventListener('keydown', (e) => {
         console.log('Key pressed:', e.key, 'Game state:', gameState);
         
-        // Start game on any key press if on menu
+        // Don't process game keys when on menu (let user type username)
         if (gameState === 'MENU') {
-            console.log('Starting game from keypress');
-            startGame();
             return;
         }
         
