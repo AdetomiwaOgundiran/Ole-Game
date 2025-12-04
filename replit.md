@@ -81,6 +81,18 @@ const GAME_CONFIG = {
 };
 ```
 
+## Leaderboard System
+
+The game includes a username and leaderboard system:
+- **Username input**: Players must enter a name before starting the game
+- **Score tracking**: Best scores are saved per username (only highest score kept)
+- **Top 5 leaderboard**: Displays on both the menu and game over screens
+- **Persistent storage**: Scores saved to `data/leaderboard.json`
+
+### API Endpoints
+- `GET /api/leaderboard` - Returns top 5 scores
+- `POST /api/score` - Submit a score (body: `{username, score}`)
+
 ## Technical Details
 
 - Uses Three.js r128 via CDN
@@ -88,6 +100,7 @@ const GAME_CONFIG = {
 - Implements infinite road recycling with segment pooling
 - Box3 collision detection for player/item/obstacle interactions
 - Responsive design with window resize handling
+- JSON-based leaderboard persistence
 
 ## Running the Game
 
@@ -109,6 +122,7 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 4, 2025: Added username input and top 5 leaderboard system with persistent storage
 - December 4, 2025: Added Lagos atmosphere elements - palm trees, sun, clouds, skyline, billboards
 - December 4, 2025: Optimized skyline building window rendering for mobile performance
 - December 4, 2025: Initial complete implementation of the Lagos-themed endless runner
