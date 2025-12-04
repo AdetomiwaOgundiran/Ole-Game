@@ -1065,12 +1065,12 @@ function setupEventListeners() {
             case 'ArrowLeft':
             case 'a':
             case 'A':
-                moveLeft();
+                moveRight();
                 break;
             case 'ArrowRight':
             case 'd':
             case 'D':
-                moveRight();
+                moveLeft();
                 break;
             case 'ArrowUp':
             case 'w':
@@ -1090,8 +1090,8 @@ function setupEventListeners() {
     const mobileJump = document.getElementById('mobile-jump');
     const mobileSlide = document.getElementById('mobile-slide');
     
-    if (mobileLeft) mobileLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
-    if (mobileRight) mobileRight.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
+    if (mobileLeft) mobileLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
+    if (mobileRight) mobileRight.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
     if (mobileJump) mobileJump.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
     if (mobileSlide) mobileSlide.addEventListener('touchstart', (e) => { e.preventDefault(); slide(); });
     
