@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const crypto = require('crypto');
 
 const PORT = 5000;
 
@@ -35,11 +36,16 @@ const server = http.createServer((req, res) => {
                 res.end('Server Error: ' + err.code);
             }
         } else {
+            const etag = crypto.createHash('md5').update(content).digest('hex');
             res.writeHead(200, { 
                 'Content-Type': contentType,
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
                 'Pragma': 'no-cache',
-                'Expires': '0'
+                'Expires': 'Thu, 01 Jan 1970 00:00:00 GMT',
+                'ETag': etag,
+                'Last-Modified': new Date().toUTCString(),
+                'Surrogate-Control': 'no-store',
+                'Vary': '*'
             });
             res.end(content, 'utf-8');
         }
@@ -48,4 +54,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Olè Game Server running at http://0.0.0.0:${PORT}`);
+    console.log(`Server started at: ${new Date().toISOString()}`);
 });
