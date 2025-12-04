@@ -765,8 +765,18 @@ function getCurrentDifficulty() {
 }
 
 function updateDifficulty() {
-    const difficulty = getCurrentDifficulty();
-    gameSpeed = difficulty.speed;
+    const distance = player ? player.position.z : 0;
+    
+    const minSpeed = GAME_CONFIG.initialSpeed;
+    const maxSpeed = GAME_CONFIG.maxSpeed;
+    const rampDistance = 2000;
+    
+    const progress = Math.min(distance / rampDistance, 1);
+    const easedProgress = 1 - Math.pow(1 - progress, 2);
+    
+    const newSpeed = minSpeed + (maxSpeed - minSpeed) * easedProgress;
+    
+    gameSpeed = Math.max(gameSpeed, newSpeed);
 }
 
 function spawnItems() {
