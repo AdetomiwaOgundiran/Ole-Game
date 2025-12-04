@@ -670,10 +670,10 @@ function createCoin(lane, z) {
 
 function createInitialEnvironment() {
     const groundGeom = new THREE.PlaneGeometry(200, 400);
-    const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d5a27 });
+    const groundMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
     groundPlane = new THREE.Mesh(groundGeom, groundMat);
     groundPlane.rotation.x = -Math.PI / 2;
-    groundPlane.position.y = -0.1;
+    groundPlane.position.y = -0.05;
     groundPlane.position.z = 100;
     groundPlane.receiveShadow = true;
     scene.add(groundPlane);
