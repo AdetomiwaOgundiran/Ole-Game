@@ -1125,12 +1125,12 @@ function setupEventListeners() {
             case 'ArrowLeft':
             case 'a':
             case 'A':
-                moveRight();
+                moveLeft();
                 break;
             case 'ArrowRight':
             case 'd':
             case 'D':
-                moveLeft();
+                moveRight();
                 break;
             case 'ArrowUp':
             case 'w':
@@ -1150,10 +1150,30 @@ function setupEventListeners() {
     const mobileJump = document.getElementById('mobile-jump');
     const mobileSlide = document.getElementById('mobile-slide');
     
-    if (mobileLeft) mobileLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
-    if (mobileRight) mobileRight.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
-    if (mobileJump) mobileJump.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
-    if (mobileSlide) mobileSlide.addEventListener('touchstart', (e) => { e.preventDefault(); slide(); });
+    const touchHandler = (action) => {
+        return (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            action();
+        };
+    };
+    
+    if (mobileLeft) {
+        mobileLeft.addEventListener('touchstart', touchHandler(moveLeft), { passive: false });
+        mobileLeft.addEventListener('click', moveLeft);
+    }
+    if (mobileRight) {
+        mobileRight.addEventListener('touchstart', touchHandler(moveRight), { passive: false });
+        mobileRight.addEventListener('click', moveRight);
+    }
+    if (mobileJump) {
+        mobileJump.addEventListener('touchstart', touchHandler(jump), { passive: false });
+        mobileJump.addEventListener('click', jump);
+    }
+    if (mobileSlide) {
+        mobileSlide.addEventListener('touchstart', touchHandler(slide), { passive: false });
+        mobileSlide.addEventListener('click', slide);
+    }
     
     window.addEventListener('resize', onWindowResize);
     
