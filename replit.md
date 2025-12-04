@@ -18,7 +18,7 @@ A 3D endless runner game themed around Lagos, Nigeria, built with Three.js.
 /
 ├── index.html       # Main HTML file with game UI
 ├── style.css        # CSS styling for UI elements
-├── script.js        # Main game logic (Three.js scene, player, items, etc.)
+├── game.js          # Main game logic (Three.js scene, player, items, etc.)
 ├── server.js        # Simple HTTP server for serving static files
 └── replit.md        # This documentation file
 ```
@@ -59,7 +59,7 @@ Mobile controls are also available on smaller screens.
 
 ## Configuration
 
-Game settings can be tweaked in `script.js` under `GAME_CONFIG`:
+Game settings can be tweaked in `game.js` under `GAME_CONFIG`:
 
 ```javascript
 const GAME_CONFIG = {
@@ -97,6 +97,18 @@ The game runs on a Node.js HTTP server at port 5000:
 node server.js
 ```
 
+## Lagos Atmosphere Features
+
+The game includes enhanced visual elements for an authentic Lagos feel:
+- **Palm trees** lining both sides of the road
+- **Golden sun** with glow effect in the sky
+- **Animated clouds** drifting across the horizon
+- **Distant skyline buildings** with lit windows (Lagos at sunset)
+- **Colorful billboards** (advertisements, phones, food, etc.)
+- **Warm fog/haze** to simulate Lagos heat
+
 ## Recent Changes
 
+- December 4, 2025: Added Lagos atmosphere elements - palm trees, sun, clouds, skyline, billboards
+- December 4, 2025: Optimized skyline building window rendering for mobile performance
 - December 4, 2025: Initial complete implementation of the Lagos-themed endless runner
