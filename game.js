@@ -88,8 +88,8 @@ function init() {
         scene.fog = new THREE.Fog(0xc9a86c, 80, 200);
         
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 8, -12);
-        camera.lookAt(0, 2, 20);
+        camera.position.set(0, 6, -6);
+        camera.lookAt(0, 1, 15);
         
         renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -915,9 +915,10 @@ function updatePlayer(delta) {
     }
     player.rotation.y = Math.sin(time * 8) * 0.05;
     
-    camera.position.z = player.position.z - 12;
+    camera.position.z = player.position.z - 6;
     camera.position.x = player.position.x * 0.3;
-    camera.lookAt(player.position.x * 0.5, 2, player.position.z + 20);
+    camera.position.y = 6;
+    camera.lookAt(player.position.x * 0.5, 1, player.position.z + 15);
     
     if (groundPlane) {
         groundPlane.position.z = player.position.z + 100;
@@ -1269,7 +1270,7 @@ function resetGame() {
             player.position.set(0, 0, 0);
         }
         if (camera) {
-            camera.position.set(0, 8, -12);
+            camera.position.set(0, 6, -6);
         }
         
         if (groundPlane) {
