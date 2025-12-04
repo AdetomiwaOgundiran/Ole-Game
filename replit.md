@@ -70,7 +70,7 @@ const GAME_CONFIG = {
     jumpHeight: 3,                // Jump arc height
     jumpDuration: 0.5,            // Jump time in seconds
     slideDuration: 0.6,           // Slide time in seconds
-    spawnDistance: 100,           // Distance ahead to spawn items
+    spawnDistance: 60,            // Distance ahead to spawn items
     despawnDistance: -20,         // Distance behind to remove items
     initialHealth: 3,             // Starting hearts
     itemScores: {
@@ -122,6 +122,9 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 4, 2025: Fixed environment reset bug - road segments and environment objects now properly reset on game restart
+- December 4, 2025: Added initial item spawning (z=15-120) for immediate player engagement
+- December 4, 2025: Reduced spawn distance from 100 to 60 for more frequent items
 - December 4, 2025: Added username input and top 5 leaderboard system with persistent storage
 - December 4, 2025: Added Lagos atmosphere elements - palm trees, sun, clouds, skyline, billboards
 - December 4, 2025: Optimized skyline building window rendering for mobile performance
