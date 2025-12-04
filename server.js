@@ -3,9 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const crypto = require('crypto');
+const { Pool } = require('pg');
 
 const PORT = process.env.PORT || 5000;
-const LEADERBOARD_FILE = './data/leaderboard.json';
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+});
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -19,31 +23,34 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
-if (!fs.existsSync('./data')) {
-    fs.mkdirSync('./data', { recursive: true });
-}
-
-if (!fs.existsSync(LEADERBOARD_FILE)) {
-    fs.writeFileSync(LEADERBOARD_FILE, JSON.stringify([], null, 2));
-}
-
-function readLeaderboard() {
+async function initDatabase() {
     try {
-        const data = fs.readFileSync(LEADERBOARD_FILE, 'utf8');
-        return JSON.parse(data);
-    } catch (e) {
-        return [];
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS leaderboard (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(20) NOT NULL UNIQUE,
+                score INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('Database initialized successfully');
+    } catch (err) {
+        console.error('Error initializing database:', err);
     }
 }
 
-function writeLeaderboard(data) {
-    fs.writeFileSync(LEADERBOARD_FILE, JSON.stringify(data, null, 2));
-}
-
-function getTopScores(leaderboard, limit = 5) {
-    return leaderboard
-        .sort((a, b) => b.score - a.score)
-        .slice(0, limit);
+async function getTopScores(limit = 5) {
+    try {
+        const result = await pool.query(
+            'SELECT username, score, updated_at as date FROM leaderboard ORDER BY score DESC LIMIT $1',
+            [limit]
+        );
+        return result.rows;
+    } catch (err) {
+        console.error('Error getting leaderboard:', err);
+        return [];
+    }
 }
 
 function sanitizeUsername(username) {
@@ -53,28 +60,34 @@ function sanitizeUsername(username) {
         .trim();
 }
 
-function updateScore(username, score) {
-    const leaderboard = readLeaderboard();
+async function updateScore(username, score) {
     const sanitizedName = sanitizeUsername(username);
-    const existingIndex = leaderboard.findIndex(
-        entry => entry.username.toLowerCase() === sanitizedName.toLowerCase()
-    );
     
-    if (existingIndex >= 0) {
-        if (score > leaderboard[existingIndex].score) {
-            leaderboard[existingIndex].score = score;
-            leaderboard[existingIndex].date = new Date().toISOString();
+    try {
+        const existing = await pool.query(
+            'SELECT score FROM leaderboard WHERE LOWER(username) = LOWER($1)',
+            [sanitizedName]
+        );
+        
+        if (existing.rows.length > 0) {
+            if (score > existing.rows[0].score) {
+                await pool.query(
+                    'UPDATE leaderboard SET score = $1, updated_at = CURRENT_TIMESTAMP WHERE LOWER(username) = LOWER($2)',
+                    [score, sanitizedName]
+                );
+            }
+        } else {
+            await pool.query(
+                'INSERT INTO leaderboard (username, score) VALUES ($1, $2)',
+                [sanitizedName, score]
+            );
         }
-    } else {
-        leaderboard.push({
-            username: sanitizedName,
-            score: score,
-            date: new Date().toISOString()
-        });
+        
+        return await getTopScores();
+    } catch (err) {
+        console.error('Error updating score:', err);
+        return await getTopScores();
     }
-    
-    writeLeaderboard(leaderboard);
-    return getTopScores(leaderboard);
 }
 
 function sendJSON(res, data, status = 200) {
@@ -88,7 +101,7 @@ function sendJSON(res, data, status = 200) {
     res.end(JSON.stringify(data));
 }
 
-function handleAPI(req, res, parsedUrl) {
+async function handleAPI(req, res, parsedUrl) {
     if (req.method === 'OPTIONS') {
         res.writeHead(200, {
             'Access-Control-Allow-Origin': '*',
@@ -100,15 +113,15 @@ function handleAPI(req, res, parsedUrl) {
     }
     
     if (parsedUrl.pathname === '/api/leaderboard' && req.method === 'GET') {
-        const leaderboard = readLeaderboard();
-        sendJSON(res, { leaderboard: getTopScores(leaderboard) });
+        const leaderboard = await getTopScores();
+        sendJSON(res, { leaderboard });
         return true;
     }
     
     if (parsedUrl.pathname === '/api/score' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk; });
-        req.on('end', () => {
+        req.on('end', async () => {
             try {
                 const data = JSON.parse(body);
                 let username = (data.username || '').trim();
@@ -131,7 +144,7 @@ function handleAPI(req, res, parsedUrl) {
                     return;
                 }
                 
-                const topScores = updateScore(username, score);
+                const topScores = await updateScore(username, score);
                 sendJSON(res, { success: true, leaderboard: topScores });
             } catch (e) {
                 sendJSON(res, { error: 'Invalid request body' }, 400);
@@ -143,11 +156,11 @@ function handleAPI(req, res, parsedUrl) {
     return false;
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url);
     
     if (parsedUrl.pathname.startsWith('/api/')) {
-        if (handleAPI(req, res, parsedUrl)) {
+        if (await handleAPI(req, res, parsedUrl)) {
             return;
         }
     }
@@ -184,7 +197,10 @@ const server = http.createServer((req, res) => {
     });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Olè Game Server running at http://0.0.0.0:${PORT}`);
-    console.log(`Server started at: ${new Date().toISOString()}`);
+initDatabase().then(() => {
+    server.listen(PORT, '0.0.0.0', () => {
+        console.log(`Olè Game Server running at http://0.0.0.0:${PORT}`);
+        console.log(`Server started at: ${new Date().toISOString()}`);
+        console.log('Using PostgreSQL database for leaderboard storage');
+    });
 });

@@ -10,7 +10,7 @@ A 3D endless runner game themed around Lagos, Nigeria, built with Three.js.
 - **Collectible items**: Money (naira notes/coins), phones, and Nigerian food items
 - **Obstacles**: Tires, thorn strips, and hanging electric wires
 - **3-lane movement system** with jump and slide mechanics
-- **Scoring system** with high score persistence via localStorage
+- **Scoring system** with PostgreSQL database persistence
 
 ## Project Structure
 
@@ -116,11 +116,22 @@ The game includes a username and leaderboard system:
 - **Username input**: Players must enter a name before starting the game
 - **Score tracking**: Best scores are saved per username (only highest score kept)
 - **Top 5 leaderboard**: Displays on both the menu and game over screens
-- **Persistent storage**: Scores saved to `data/leaderboard.json`
+- **Persistent storage**: PostgreSQL database (permanent, survives deployments)
 
 ### API Endpoints
 - `GET /api/leaderboard` - Returns top 5 scores
 - `POST /api/score` - Submit a score (body: `{username, score}`)
+
+### Database Schema
+```sql
+CREATE TABLE leaderboard (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(20) NOT NULL UNIQUE,
+    score INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
 ## Technical Details
 
@@ -129,7 +140,7 @@ The game includes a username and leaderboard system:
 - Implements infinite road recycling with segment pooling
 - Box3 collision detection for player/item/obstacle interactions
 - Responsive design with window resize handling
-- JSON-based leaderboard persistence
+- PostgreSQL database for persistent leaderboard storage
 
 ## Running the Game
 
@@ -151,6 +162,8 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 4, 2025: Migrated leaderboard storage from JSON file to PostgreSQL database for permanent persistence
+- December 4, 2025: Fixed camera and road positioning - road now always visible behind player, no ground plane showing
 - December 4, 2025: Rebalanced difficulty - reduced obstacle clustering, smoother progression curve, max 2 obstacles until very late game
 - December 4, 2025: Improved leaderboard caching - added cache-busting to ensure fresh data on start screen
 - December 4, 2025: Added progressive difficulty system with 9 levels - speed and obstacles increase over distance
