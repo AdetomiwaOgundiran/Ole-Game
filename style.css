@@ -113,6 +113,127 @@ html, body {
     background: rgba(255, 255, 255, 0.3);
 }
 
+.game-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.game-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.username-section {
+    margin-bottom: 20px;
+}
+
+#username-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#username-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#username-input:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.leaderboard-section {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.leaderboard-title {
+    font-size: 1.1rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.leaderboard-list {
+    text-align: left;
+}
+
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.leaderboard-entry.first {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 165, 0, 0.2) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.leaderboard-rank {
+    width: 25px;
+    font-weight: 700;
+    color: #ffd700;
+}
+
+.leaderboard-name {
+    flex: 1;
+    margin-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaderboard-score {
+    font-weight: 700;
+    color: #ffd700;
+}
+
+.loading-text, .empty-text {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+.gameover-leaderboard {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.player-name-display {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#player-name {
+    font-size: 1rem;
+    color: #ff6b35;
+    font-weight: 600;
+}
+
 .controls-info {
     margin-top: 30px;
     padding: 20px;

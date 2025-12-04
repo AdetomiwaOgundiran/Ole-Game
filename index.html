@@ -15,7 +15,20 @@
                 <h1 class="game-title">OLÈ</h1>
                 <p class="game-subtitle">The Lagos Hustle</p>
                 <p class="game-description">Run through the streets of Lagos, collect valuables, and dodge danger!</p>
-                <button id="start-btn" class="game-btn" onclick="console.log('Button clicked via onclick'); if(typeof startGame === 'function') startGame(); else alert('Game not loaded');">Start Game</button>
+                
+                <div class="username-section">
+                    <input type="text" id="username-input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+                </div>
+                
+                <button id="start-btn" class="game-btn" disabled>Start Game</button>
+                
+                <div class="leaderboard-section">
+                    <h3 class="leaderboard-title">Top Players</h3>
+                    <div id="leaderboard-list" class="leaderboard-list">
+                        <p class="loading-text">Loading...</p>
+                    </div>
+                </div>
+                
                 <div class="controls-info">
                     <p><strong>Controls:</strong></p>
                     <p>← / A - Move Left | → / D - Move Right</p>
@@ -26,6 +39,9 @@
         
         <div id="hud" class="hidden">
             <div class="hud-top">
+                <div class="player-name-display">
+                    <span id="player-name"></span>
+                </div>
                 <div class="score-container">
                     <span class="score-label">SCORE</span>
                     <span id="score">0</span>
@@ -49,6 +65,12 @@
                     <p>Score: <span id="final-score">0</span></p>
                     <p>Best: <span id="final-best-score">0</span></p>
                 </div>
+                
+                <div class="gameover-leaderboard">
+                    <h3 class="leaderboard-title">Top Players</h3>
+                    <div id="gameover-leaderboard-list" class="leaderboard-list"></div>
+                </div>
+                
                 <div class="gameover-buttons">
                     <button id="restart-btn" class="game-btn">Play Again</button>
                     <button id="menu-btn" class="game-btn secondary">Main Menu</button>

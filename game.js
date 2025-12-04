@@ -39,6 +39,8 @@ let lastSpawnZ = 0;
 
 let menuScreen, hudElement, gameoverScreen, scoreElement, bestScoreElement;
 let finalScoreElement, finalBestScoreElement, heartsContainer, mobileControls;
+let usernameInput, startBtn, playerNameDisplay, leaderboardList, gameoverLeaderboardList;
+let currentUsername = '';
 
 let webglSupported = true;
 
@@ -54,8 +56,15 @@ function init() {
     finalBestScoreElement = document.getElementById('final-best-score');
     heartsContainer = document.getElementById('hearts');
     mobileControls = document.getElementById('mobile-controls');
+    usernameInput = document.getElementById('username-input');
+    startBtn = document.getElementById('start-btn');
+    playerNameDisplay = document.getElementById('player-name');
+    leaderboardList = document.getElementById('leaderboard-list');
+    gameoverLeaderboardList = document.getElementById('gameover-leaderboard-list');
     
     const canvas = document.getElementById('game-canvas');
+    
+    fetchLeaderboard();
     
     setupEventListeners();
     
@@ -1097,6 +1106,21 @@ function setupEventListeners() {
     
     window.addEventListener('resize', onWindowResize);
     
+    if (usernameInput) {
+        usernameInput.addEventListener('input', () => {
+            const username = usernameInput.value.trim();
+            if (startBtn) {
+                startBtn.disabled = username.length === 0;
+            }
+        });
+        
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && usernameInput.value.trim().length > 0) {
+                startGame();
+            }
+        });
+    }
+    
     console.log('Event listeners setup complete');
 }
 
@@ -1111,10 +1135,22 @@ function onWindowResize() {
 function startGame() {
     console.log('startGame called');
     try {
+        if (usernameInput) {
+            currentUsername = usernameInput.value.trim();
+            if (currentUsername.length === 0) {
+                console.log('Username required');
+                return;
+            }
+        }
+        
         gameState = 'PLAYING';
         if (menuScreen) menuScreen.classList.add('hidden');
         if (hudElement) hudElement.classList.remove('hidden');
         if (mobileControls) mobileControls.classList.remove('hidden');
+        
+        if (playerNameDisplay) {
+            playerNameDisplay.textContent = currentUsername;
+        }
         
         resetGame();
         console.log('Game started successfully');
@@ -1167,6 +1203,8 @@ function gameOver() {
     hudElement.classList.add('hidden');
     mobileControls.classList.add('hidden');
     gameoverScreen.classList.remove('hidden');
+    
+    submitScore(currentUsername, score);
 }
 
 function restartGame() {
@@ -1182,6 +1220,70 @@ function showMenu() {
     gameoverScreen.classList.add('hidden');
     menuScreen.classList.remove('hidden');
     gameState = 'MENU';
+    fetchLeaderboard();
+}
+
+function fetchLeaderboard() {
+    fetch('/api/leaderboard')
+        .then(response => response.json())
+        .then(data => {
+            renderLeaderboard(data.leaderboard, leaderboardList);
+            renderLeaderboard(data.leaderboard, gameoverLeaderboardList);
+        })
+        .catch(error => {
+            console.error('Error fetching leaderboard:', error);
+            if (leaderboardList) {
+                leaderboardList.innerHTML = '<p class="empty-text">Could not load leaderboard</p>';
+            }
+        });
+}
+
+function renderLeaderboard(leaderboard, container) {
+    if (!container) return;
+    
+    if (!leaderboard || leaderboard.length === 0) {
+        container.innerHTML = '<p class="empty-text">No scores yet. Be the first!</p>';
+        return;
+    }
+    
+    container.innerHTML = leaderboard.map((entry, index) => `
+        <div class="leaderboard-entry${index === 0 ? ' first' : ''}">
+            <span class="leaderboard-rank">${index + 1}.</span>
+            <span class="leaderboard-name">${escapeHtml(entry.username)}</span>
+            <span class="leaderboard-score">${entry.score}</span>
+        </div>
+    `).join('');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function submitScore(username, playerScore) {
+    if (!username || username.length === 0) return;
+    
+    fetch('/api/score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            score: playerScore
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.leaderboard) {
+            renderLeaderboard(data.leaderboard, leaderboardList);
+            renderLeaderboard(data.leaderboard, gameoverLeaderboardList);
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting score:', error);
+    });
 }
 
 function animate() {
