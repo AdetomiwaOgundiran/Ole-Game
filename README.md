@@ -2,7 +2,7 @@
 
 **A culturally-authentic 3D endless runner game celebrating Lagos street life**
 
-[Play Now](https://ole-the-lagos-hustle.replit.app) | [Product Decisions](./PRODUCT_DECISIONS.md)
+[Play Now](https://ole-game.com) | [Product Decisions](./PRODUCT_DECISIONS.md)
 
 ![Game Preview](https://img.shields.io/badge/Platform-Web-blue) ![Tech](https://img.shields.io/badge/Built%20with-Three.js-green) ![Status](https://img.shields.io/badge/Status-Live-success)
 
@@ -18,7 +18,7 @@
 > 
 > **Tech**: Three.js, vanilla JavaScript, Node.js backend
 > 
-> **Try it**: [Play the live game](https://ole-the-lagos-hustle.replit.app)
+> **Try it**: [Play the live game](https://ole-game.com)
 
 ---
 
@@ -179,17 +179,17 @@ Tier 8-9 (1800+):   Mastery phase, high speed, complex patterns
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────┐
-│                 DATA (JSON File Store)                   │
+│              DATA (PostgreSQL Database)                  │
 ├─────────────────────────────────────────────────────────┤
-│  data/leaderboard.json                                  │
-│  └── { scores: [{username, score, date}] }             │
+│  leaderboard table                                       │
+│  └── { id, username, score, created_at, updated_at }   │
 └─────────────────────────────────────────────────────────┘
 ```
 
 **Why This Stack?**
 - **Three.js**: Enables 3D graphics in browser without plugins
 - **Vanilla JS**: No framework overhead, fast load times
-- **JSON Storage**: Simple, sufficient for leaderboard scale
+- **PostgreSQL**: Persistent database storage, survives deployments
 - **Node.js Server**: Lightweight, handles API + static serving
 
 ---
@@ -288,9 +288,7 @@ ole-lagos-hustle/
 ├── index.html          # Game HTML structure
 ├── style.css           # UI and game styling
 ├── game.js             # Three.js game logic (~1400 lines)
-├── server.js           # Node.js server with API
-├── data/
-│   └── leaderboard.json    # Score persistence
+├── server.js           # Node.js server with PostgreSQL API
 ├── README.md           # This file
 ├── PRODUCT_DECISIONS.md    # Detailed product rationale
 └── replit.md           # Development notes
