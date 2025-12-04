@@ -22,7 +22,7 @@ let scene, camera, renderer, clock;
 let player, playerBox;
 let gameState = 'MENU';
 let score = 0;
-let bestScore = localStorage.getItem('olebestScore') || 0;
+let bestScore = parseInt(localStorage.getItem('olebestScore')) || 0;
 let health = GAME_CONFIG.initialHealth;
 let currentLane = 1;
 let targetLaneX = 0;
@@ -37,43 +37,68 @@ let obstacles = [];
 let environmentObjects = [];
 let lastSpawnZ = 0;
 
-const menuScreen = document.getElementById('menu-screen');
-const hudElement = document.getElementById('hud');
-const gameoverScreen = document.getElementById('gameover-screen');
-const scoreElement = document.getElementById('score');
-const bestScoreElement = document.getElementById('best-score');
-const finalScoreElement = document.getElementById('final-score');
-const finalBestScoreElement = document.getElementById('final-best-score');
-const heartsContainer = document.getElementById('hearts');
-const mobileControls = document.getElementById('mobile-controls');
+let menuScreen, hudElement, gameoverScreen, scoreElement, bestScoreElement;
+let finalScoreElement, finalBestScoreElement, heartsContainer, mobileControls;
+
+let webglSupported = true;
 
 function init() {
+    console.log('Initializing game...');
+    
+    menuScreen = document.getElementById('menu-screen');
+    hudElement = document.getElementById('hud');
+    gameoverScreen = document.getElementById('gameover-screen');
+    scoreElement = document.getElementById('score');
+    bestScoreElement = document.getElementById('best-score');
+    finalScoreElement = document.getElementById('final-score');
+    finalBestScoreElement = document.getElementById('final-best-score');
+    heartsContainer = document.getElementById('hearts');
+    mobileControls = document.getElementById('mobile-controls');
+    
     const canvas = document.getElementById('game-canvas');
     
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb);
-    scene.fog = new THREE.Fog(0x87ceeb, 50, 150);
-    
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 8, -12);
-    camera.lookAt(0, 2, 20);
-    
-    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
-    clock = new THREE.Clock();
-    
-    setupLights();
-    createPlayer();
-    createInitialEnvironment();
-    
-    bestScoreElement.textContent = bestScore;
-    
-    setupEventListeners();
-    
-    animate();
+    try {
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+            throw new Error('WebGL not supported');
+        }
+        
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87ceeb);
+        scene.fog = new THREE.Fog(0x87ceeb, 50, 150);
+        
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 8, -12);
+        camera.lookAt(0, 2, 20);
+        
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        clock = new THREE.Clock();
+        
+        setupLights();
+        createPlayer();
+        createInitialEnvironment();
+        
+        if (bestScoreElement) bestScoreElement.textContent = bestScore;
+        
+        console.log('WebGL initialized successfully');
+        
+        setupEventListeners();
+        animate();
+    } catch (e) {
+        console.error('WebGL initialization failed:', e);
+        webglSupported = false;
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,0,0,0.8);color:white;padding:20px;border-radius:10px;text-align:center;z-index:1000;';
+        errorDiv.innerHTML = '<h2>WebGL Not Supported</h2><p>Your browser does not support WebGL, which is required for this 3D game.</p><p>Please try using a modern browser like Chrome, Firefox, or Edge.</p>';
+        document.body.appendChild(errorDiv);
+        
+        setupEventListeners();
+    }
 }
 
 function setupLights() {
@@ -756,15 +781,16 @@ function takeDamage() {
 }
 
 function updateScore() {
-    scoreElement.textContent = score;
+    if (scoreElement) scoreElement.textContent = score;
     if (score > bestScore) {
         bestScore = score;
-        bestScoreElement.textContent = bestScore;
+        if (bestScoreElement) bestScoreElement.textContent = bestScore;
         localStorage.setItem('olebestScore', bestScore);
     }
 }
 
 function updateHearts() {
+    if (!heartsContainer) return;
     const hearts = heartsContainer.querySelectorAll('.heart');
     hearts.forEach((heart, index) => {
         if (index >= health) {
@@ -804,9 +830,33 @@ function slide() {
 }
 
 function setupEventListeners() {
-    document.getElementById('start-btn').addEventListener('click', startGame);
-    document.getElementById('restart-btn').addEventListener('click', restartGame);
-    document.getElementById('menu-btn').addEventListener('click', showMenu);
+    console.log('Setting up event listeners...');
+    
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const menuBtn = document.getElementById('menu-btn');
+    
+    if (startBtn) {
+        startBtn.addEventListener('click', function(e) {
+            console.log('Start button clicked');
+            startGame();
+        });
+        console.log('Start button listener attached');
+    }
+    
+    if (restartBtn) {
+        restartBtn.addEventListener('click', function(e) {
+            console.log('Restart button clicked');
+            restartGame();
+        });
+    }
+    
+    if (menuBtn) {
+        menuBtn.addEventListener('click', function(e) {
+            console.log('Menu button clicked');
+            showMenu();
+        });
+    }
     
     document.addEventListener('keydown', (e) => {
         switch(e.key) {
@@ -833,51 +883,77 @@ function setupEventListeners() {
         }
     });
     
-    document.getElementById('mobile-left').addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
-    document.getElementById('mobile-right').addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
-    document.getElementById('mobile-jump').addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
-    document.getElementById('mobile-slide').addEventListener('touchstart', (e) => { e.preventDefault(); slide(); });
+    const mobileLeft = document.getElementById('mobile-left');
+    const mobileRight = document.getElementById('mobile-right');
+    const mobileJump = document.getElementById('mobile-jump');
+    const mobileSlide = document.getElementById('mobile-slide');
+    
+    if (mobileLeft) mobileLeft.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft(); });
+    if (mobileRight) mobileRight.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight(); });
+    if (mobileJump) mobileJump.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
+    if (mobileSlide) mobileSlide.addEventListener('touchstart', (e) => { e.preventDefault(); slide(); });
     
     window.addEventListener('resize', onWindowResize);
+    
+    console.log('Event listeners setup complete');
 }
 
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (camera && renderer) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 }
 
 function startGame() {
-    gameState = 'PLAYING';
-    menuScreen.classList.add('hidden');
-    hudElement.classList.remove('hidden');
-    mobileControls.classList.remove('hidden');
-    
-    resetGame();
+    console.log('startGame called');
+    try {
+        gameState = 'PLAYING';
+        if (menuScreen) menuScreen.classList.add('hidden');
+        if (hudElement) hudElement.classList.remove('hidden');
+        if (mobileControls) mobileControls.classList.remove('hidden');
+        
+        resetGame();
+        console.log('Game started successfully');
+    } catch (e) {
+        console.error('Error starting game:', e);
+    }
 }
 
 function resetGame() {
-    score = 0;
-    health = GAME_CONFIG.initialHealth;
-    gameSpeed = GAME_CONFIG.initialSpeed;
-    currentLane = 1;
-    targetLaneX = 0;
-    isJumping = false;
-    isSliding = false;
-    
-    player.position.set(0, 0, 0);
-    camera.position.set(0, 8, -12);
-    
-    collectibles.forEach(c => scene.remove(c));
-    collectibles = [];
-    
-    obstacles.forEach(o => scene.remove(o));
-    obstacles = [];
-    
-    lastSpawnZ = GAME_CONFIG.spawnDistance;
-    
-    updateScore();
-    updateHearts();
+    console.log('resetGame called');
+    try {
+        score = 0;
+        health = GAME_CONFIG.initialHealth;
+        gameSpeed = GAME_CONFIG.initialSpeed;
+        currentLane = 1;
+        targetLaneX = 0;
+        isJumping = false;
+        isSliding = false;
+        
+        if (player) {
+            player.position.set(0, 0, 0);
+        }
+        if (camera) {
+            camera.position.set(0, 8, -12);
+        }
+        
+        if (scene) {
+            collectibles.forEach(c => scene.remove(c));
+            obstacles.forEach(o => scene.remove(o));
+        }
+        collectibles = [];
+        obstacles = [];
+        
+        lastSpawnZ = GAME_CONFIG.spawnDistance;
+        
+        updateScore();
+        updateHearts();
+        console.log('resetGame complete');
+    } catch (e) {
+        console.error('Error in resetGame:', e);
+    }
 }
 
 function gameOver() {
@@ -923,4 +999,8 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-init();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
