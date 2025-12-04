@@ -82,24 +82,33 @@ const GAME_CONFIG = {
 
 ## Progressive Difficulty System
 
-The game features 9 difficulty levels that increase based on distance traveled:
+The game features 9 difficulty levels that increase based on distance traveled with smoother progression:
 
 | Level | Distance | Speed | Obstacle Chance | Max Obstacles | Collectible Chance |
 |-------|----------|-------|-----------------|---------------|-------------------|
-| 1 | 0 | 0.20 | 25% | 1 | 80% |
-| 2 | 100 | 0.28 | 35% | 1 | 70% |
-| 3 | 250 | 0.38 | 45% | 1 | 60% |
-| 4 | 450 | 0.48 | 55% | 2 | 55% |
-| 5 | 700 | 0.58 | 65% | 2 | 50% |
-| 6 | 1000 | 0.68 | 75% | 2 | 45% |
-| 7 | 1400 | 0.78 | 80% | 3 | 40% |
-| 8 | 1900 | 0.88 | 85% | 3 | 35% |
-| 9 | 2500 | 1.00 | 90% | 3 | 30% |
+| 1 | 0 | 0.20 | 20% | 1 | 85% |
+| 2 | 150 | 0.26 | 25% | 1 | 80% |
+| 3 | 350 | 0.32 | 30% | 1 | 75% |
+| 4 | 600 | 0.40 | 40% | 1 | 70% |
+| 5 | 900 | 0.50 | 50% | 2 | 60% |
+| 6 | 1300 | 0.60 | 55% | 2 | 55% |
+| 7 | 1800 | 0.72 | 60% | 2 | 50% |
+| 8 | 2400 | 0.85 | 70% | 2 | 45% |
+| 9 | 3200 | 1.00 | 80% | 3 | 40% |
 
 As you progress:
-- Game speed increases noticeably at each tier
-- More obstacles spawn per wave (up to 3 at highest levels)
-- Collectibles become rarer, making each one more valuable
+- Game speed increases gradually at each tier
+- Obstacles spawn with 15-unit spacing between them to allow reaction time
+- Multiple obstacles (2-3) only appear at very high levels
+- Collectibles remain plentiful for a more rewarding experience
+
+## Randomness
+
+Every playthrough is completely random:
+- Lane positions for obstacles/collectibles are randomly chosen
+- Obstacle types (tires, thorns, wires) are randomly selected
+- Spawn timing varies within allowed gaps
+- No two runs are ever identical
 
 ## Leaderboard System
 
@@ -142,6 +151,8 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 4, 2025: Rebalanced difficulty - reduced obstacle clustering, smoother progression curve, max 2 obstacles until very late game
+- December 4, 2025: Improved leaderboard caching - added cache-busting to ensure fresh data on start screen
 - December 4, 2025: Added progressive difficulty system with 9 levels - speed and obstacles increase over distance
 - December 4, 2025: Redesigned mobile controls to D-pad layout centered at bottom of screen
 - December 4, 2025: Fixed environment reset bug - road segments and environment objects now properly reset on game restart

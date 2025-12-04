@@ -17,15 +17,15 @@ const GAME_CONFIG = {
     },
     difficulty: {
         levels: [
-            { distance: 0,    speed: 0.20, obstacleChance: 0.25, maxObstacles: 1, collectibleChance: 0.8 },
-            { distance: 100,  speed: 0.28, obstacleChance: 0.35, maxObstacles: 1, collectibleChance: 0.7 },
-            { distance: 250,  speed: 0.38, obstacleChance: 0.45, maxObstacles: 1, collectibleChance: 0.6 },
-            { distance: 450,  speed: 0.48, obstacleChance: 0.55, maxObstacles: 2, collectibleChance: 0.55 },
-            { distance: 700,  speed: 0.58, obstacleChance: 0.65, maxObstacles: 2, collectibleChance: 0.5 },
-            { distance: 1000, speed: 0.68, obstacleChance: 0.75, maxObstacles: 2, collectibleChance: 0.45 },
-            { distance: 1400, speed: 0.78, obstacleChance: 0.80, maxObstacles: 3, collectibleChance: 0.4 },
-            { distance: 1900, speed: 0.88, obstacleChance: 0.85, maxObstacles: 3, collectibleChance: 0.35 },
-            { distance: 2500, speed: 1.00, obstacleChance: 0.90, maxObstacles: 3, collectibleChance: 0.3 }
+            { distance: 0,    speed: 0.20, obstacleChance: 0.20, maxObstacles: 1, collectibleChance: 0.85 },
+            { distance: 150,  speed: 0.26, obstacleChance: 0.25, maxObstacles: 1, collectibleChance: 0.8 },
+            { distance: 350,  speed: 0.32, obstacleChance: 0.30, maxObstacles: 1, collectibleChance: 0.75 },
+            { distance: 600,  speed: 0.40, obstacleChance: 0.40, maxObstacles: 1, collectibleChance: 0.7 },
+            { distance: 900,  speed: 0.50, obstacleChance: 0.50, maxObstacles: 2, collectibleChance: 0.6 },
+            { distance: 1300, speed: 0.60, obstacleChance: 0.55, maxObstacles: 2, collectibleChance: 0.55 },
+            { distance: 1800, speed: 0.72, obstacleChance: 0.60, maxObstacles: 2, collectibleChance: 0.5 },
+            { distance: 2400, speed: 0.85, obstacleChance: 0.70, maxObstacles: 2, collectibleChance: 0.45 },
+            { distance: 3200, speed: 1.00, obstacleChance: 0.80, maxObstacles: 3, collectibleChance: 0.4 }
         ]
     }
 };
@@ -773,7 +773,7 @@ function spawnItems() {
     const spawnZ = player.position.z + GAME_CONFIG.spawnDistance;
     const difficulty = getCurrentDifficulty();
     
-    const minSpawnGap = Math.max(10, 15 - currentDifficultyLevel);
+    const minSpawnGap = Math.max(12, 18 - currentDifficultyLevel);
     if (spawnZ - lastSpawnZ < minSpawnGap) return;
     
     lastSpawnZ = spawnZ;
@@ -797,7 +797,7 @@ function spawnItems() {
         
         const obstacleType = Math.random();
         let obstacle;
-        const offsetZ = spawnZ + o * 12;
+        const offsetZ = spawnZ + o * 15;
         
         if (obstacleType < 0.4) {
             obstacle = createTire(lane, offsetZ);
