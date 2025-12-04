@@ -33,7 +33,7 @@ const GAME_CONFIG = {
 let currentDifficultyLevel = 0;
 
 let scene, camera, renderer, clock;
-let player, playerBox;
+let player, playerBox, groundPlane;
 let gameState = 'MENU';
 let score = 0;
 let bestScore = parseInt(localStorage.getItem('olebestScore')) || 0;
@@ -669,6 +669,15 @@ function createCoin(lane, z) {
 }
 
 function createInitialEnvironment() {
+    const groundGeom = new THREE.PlaneGeometry(200, 400);
+    const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d5a27 });
+    groundPlane = new THREE.Mesh(groundGeom, groundMat);
+    groundPlane.rotation.x = -Math.PI / 2;
+    groundPlane.position.y = -0.1;
+    groundPlane.position.z = 100;
+    groundPlane.receiveShadow = true;
+    scene.add(groundPlane);
+    
     for (let i = 0; i < GAME_CONFIG.numSegments; i++) {
         const z = i * GAME_CONFIG.segmentLength;
         const segment = createRoadSegment(z);
@@ -909,6 +918,10 @@ function updatePlayer(delta) {
     camera.position.z = player.position.z - 12;
     camera.position.x = player.position.x * 0.3;
     camera.lookAt(player.position.x * 0.5, 2, player.position.z + 20);
+    
+    if (groundPlane) {
+        groundPlane.position.z = player.position.z + 100;
+    }
     
     const playerMin = new THREE.Vector3(
         player.position.x - 0.4,
@@ -1257,6 +1270,10 @@ function resetGame() {
         }
         if (camera) {
             camera.position.set(0, 8, -12);
+        }
+        
+        if (groundPlane) {
+            groundPlane.position.z = 100;
         }
         
         if (scene) {
