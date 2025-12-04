@@ -6,7 +6,7 @@ const GAME_CONFIG = {
     jumpHeight: 3,
     jumpDuration: 0.5,
     slideDuration: 0.6,
-    spawnDistance: 100,
+    spawnDistance: 60,
     despawnDistance: -20,
     segmentLength: 50,
     numSegments: 5,
@@ -1178,11 +1178,23 @@ function resetGame() {
         if (scene) {
             collectibles.forEach(c => scene.remove(c));
             obstacles.forEach(o => scene.remove(o));
+            environmentObjects.forEach(obj => scene.remove(obj));
         }
         collectibles = [];
         obstacles = [];
+        environmentObjects = [];
         
-        lastSpawnZ = GAME_CONFIG.spawnDistance;
+        roadSegments.forEach((segment, i) => {
+            segment.position.z = i * GAME_CONFIG.segmentLength;
+        });
+        
+        for (let i = 0; i < GAME_CONFIG.numSegments; i++) {
+            createEnvironmentForSegment(i * GAME_CONFIG.segmentLength);
+        }
+        
+        lastSpawnZ = 0;
+        
+        spawnInitialItems();
         
         updateScore();
         updateHearts();
@@ -1190,6 +1202,47 @@ function resetGame() {
     } catch (e) {
         console.error('Error in resetGame:', e);
     }
+}
+
+function spawnInitialItems() {
+    for (let z = 15; z < 120; z += 12) {
+        const lane = Math.floor(Math.random() * 3);
+        
+        if (Math.random() > 0.3) {
+            const itemType = Math.random();
+            let collectible;
+            
+            if (itemType < 0.5) {
+                collectible = Math.random() > 0.5 ? createMoney(lane, z) : createCoin(lane, z);
+            } else if (itemType < 0.7) {
+                collectible = createPhone(lane, z);
+            } else {
+                collectible = createFood(lane, z);
+            }
+            
+            scene.add(collectible);
+            collectibles.push(collectible);
+        }
+        
+        if (z > 30 && Math.random() > 0.6) {
+            const obstacleLane = (lane + 1 + Math.floor(Math.random() * 2)) % 3;
+            const obstacleType = Math.random();
+            let obstacle;
+            
+            if (obstacleType < 0.4) {
+                obstacle = createTire(obstacleLane, z + 5);
+            } else if (obstacleType < 0.7) {
+                obstacle = createThorns(obstacleLane, z + 5);
+            } else {
+                obstacle = createElectricWire(obstacleLane, z + 5);
+            }
+            
+            scene.add(obstacle);
+            obstacles.push(obstacle);
+        }
+    }
+    
+    lastSpawnZ = 120;
 }
 
 function gameOver() {
