@@ -773,7 +773,7 @@ function spawnItems() {
     const spawnZ = player.position.z + GAME_CONFIG.spawnDistance;
     const difficulty = getCurrentDifficulty();
     
-    const minSpawnGap = Math.max(6, 10 - currentDifficultyLevel);
+    const minSpawnGap = Math.max(10, 15 - currentDifficultyLevel);
     if (spawnZ - lastSpawnZ < minSpawnGap) return;
     
     lastSpawnZ = spawnZ;
@@ -797,7 +797,7 @@ function spawnItems() {
         
         const obstacleType = Math.random();
         let obstacle;
-        const offsetZ = spawnZ + o * 4;
+        const offsetZ = spawnZ + o * 12;
         
         if (obstacleType < 0.4) {
             obstacle = createTire(lane, offsetZ);
