@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olè - The Lagos Hustle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <div id="menu-screen" class="screen">
+            <div class="menu-content">
+                <h1 class="game-title">OLÈ</h1>
+                <p class="game-subtitle">The Lagos Hustle</p>
+                <p class="game-description">Run through the streets of Lagos, collect valuables, and dodge danger!</p>
+                
+                <div class="username-section">
+                    <input type="text" id="username-input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+                </div>
+                
+                <button id="start-btn" class="game-btn" disabled>Start Game</button>
+                
+                <div class="leaderboard-section">
+                    <h3 class="leaderboard-title">Top Players</h3>
+                    <div id="leaderboard-list" class="leaderboard-list">
+                        <p class="loading-text">Loading...</p>
+                    </div>
+                </div>
+                
+                <div class="controls-info">
+                    <p><strong>Controls:</strong></p>
+                    <p>← / A - Move Left | → / D - Move Right</p>
+                    <p>↑ / W - Jump | ↓ / S - Slide</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="hud" class="hidden">
+            <div class="hud-top">
+                <div class="player-name-display">
+                    <span id="player-name"></span>
+                </div>
+                <div class="score-container">
+                    <span class="score-label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="best-score-container">
+                    <span class="score-label">BEST</span>
+                    <span id="best-score">0</span>
+                </div>
+            </div>
+            <div class="hearts-container" id="hearts">
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+            </div>
+        </div>
+        
+        <div id="gameover-screen" class="screen hidden">
+            <div class="gameover-content">
+                <h2 class="gameover-title">GAME OVER</h2>
+                <div class="final-scores">
+                    <p>Score: <span id="final-score">0</span></p>
+                    <p>Best: <span id="final-best-score">0</span></p>
+                </div>
+                
+                <div class="gameover-leaderboard">
+                    <h3 class="leaderboard-title">Top Players</h3>
+                    <div id="gameover-leaderboard-list" class="leaderboard-list"></div>
+                </div>
+                
+                <div class="gameover-buttons">
+                    <button id="restart-btn" class="game-btn">Play Again</button>
+                    <button id="menu-btn" class="game-btn secondary">Main Menu</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-controls" class="hidden">
+            <div class="dpad-container">
+                <button id="mobile-jump" class="mobile-btn up-btn">▲</button>
+                <div class="dpad-middle">
+                    <button id="mobile-left" class="mobile-btn left-btn">◀</button>
+                    <button id="mobile-right" class="mobile-btn right-btn">▶</button>
+                </div>
+                <button id="mobile-slide" class="mobile-btn down-btn">▼</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
