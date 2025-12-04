@@ -4,7 +4,7 @@ const path = require('path');
 const url = require('url');
 const crypto = require('crypto');
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const LEADERBOARD_FILE = './data/leaderboard.json';
 
 const mimeTypes = {
