@@ -2,9 +2,23 @@
 
 **A culturally-authentic 3D endless runner game celebrating Lagos street life**
 
-[Play Now](https://ole-the-lagos-hustle.replit.app) | [Demo Video](#demo) | [Product Decisions](./PRODUCT_DECISIONS.md)
+[Play Now](https://ole-the-lagos-hustle.replit.app) | [Product Decisions](./PRODUCT_DECISIONS.md)
 
 ![Game Preview](https://img.shields.io/badge/Platform-Web-blue) ![Tech](https://img.shields.io/badge/Built%20with-Three.js-green) ![Status](https://img.shields.io/badge/Status-Live-success)
+
+---
+
+## TL;DR
+
+> **What**: 3D endless runner set in Lagos, Nigeria - dodge tires, collect naira, compete on leaderboards
+> 
+> **Who**: Nigerian youth, African diaspora, and global casual gamers seeking fresh cultural experiences
+> 
+> **Why**: African gamers deserve representation; global audiences want unique settings
+> 
+> **Tech**: Three.js, vanilla JavaScript, Node.js backend
+> 
+> **Try it**: [Play the live game](https://ole-the-lagos-hustle.replit.app)
 
 ---
 
@@ -250,10 +264,13 @@ Tier 8-9 (1800+):   Mastery phase, high speed, complex patterns
 
 ```bash
 # Clone the repository
-git clone https://github.com/[your-username]/ole-lagos-hustle.git
+git clone https://github.com/AdetomiwaOgundiran/Ole-Game.git
 
 # Navigate to project
-cd ole-lagos-hustle
+cd Ole-Game
+
+# Install dependencies
+npm install
 
 # Start the server
 node server.js
