@@ -57,12 +57,9 @@ function init() {
     
     const canvas = document.getElementById('game-canvas');
     
+    setupEventListeners();
+    
     try {
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) {
-            throw new Error('WebGL not supported');
-        }
-        
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x87ceeb);
         scene.fog = new THREE.Fog(0x87ceeb, 50, 150);
@@ -86,18 +83,11 @@ function init() {
         
         console.log('WebGL initialized successfully');
         
-        setupEventListeners();
         animate();
     } catch (e) {
         console.error('WebGL initialization failed:', e);
         webglSupported = false;
-        
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,0,0,0.8);color:white;padding:20px;border-radius:10px;text-align:center;z-index:1000;';
-        errorDiv.innerHTML = '<h2>WebGL Not Supported</h2><p>Your browser does not support WebGL, which is required for this 3D game.</p><p>Please try using a modern browser like Chrome, Firefox, or Edge.</p>';
-        document.body.appendChild(errorDiv);
-        
-        setupEventListeners();
+        alert('WebGL initialization failed. Please make sure you are using a modern browser with WebGL support.');
     }
 }
 
@@ -859,6 +849,22 @@ function setupEventListeners() {
     }
     
     document.addEventListener('keydown', (e) => {
+        console.log('Key pressed:', e.key, 'Game state:', gameState);
+        
+        // Start game on any key press if on menu
+        if (gameState === 'MENU') {
+            console.log('Starting game from keypress');
+            startGame();
+            return;
+        }
+        
+        // Restart game on any key press if game over
+        if (gameState === 'GAMEOVER') {
+            console.log('Restarting game from keypress');
+            restartGame();
+            return;
+        }
+        
         switch(e.key) {
             case 'ArrowLeft':
             case 'a':
@@ -999,8 +1005,19 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
+function safeInit() {
+    console.log('Document ready, checking Three.js...');
+    if (typeof THREE === 'undefined') {
+        console.error('Three.js not loaded!');
+        alert('Error: Three.js library failed to load. Please refresh the page.');
+        return;
+    }
+    console.log('Three.js loaded, initializing game...');
     init();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', safeInit);
+} else {
+    safeInit();
 }

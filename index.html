@@ -15,7 +15,7 @@
                 <h1 class="game-title">OLÈ</h1>
                 <p class="game-subtitle">The Lagos Hustle</p>
                 <p class="game-description">Run through the streets of Lagos, collect valuables, and dodge danger!</p>
-                <button id="start-btn" class="game-btn">Start Game</button>
+                <button id="start-btn" class="game-btn" onclick="console.log('Button clicked via onclick'); if(typeof startGame === 'function') startGame(); else alert('Game not loaded');">Start Game</button>
                 <div class="controls-info">
                     <p><strong>Controls:</strong></p>
                     <p>← / A - Move Left | → / D - Move Right</p>
