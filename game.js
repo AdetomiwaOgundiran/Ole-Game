@@ -1329,6 +1329,7 @@ function gameOver() {
     mobileControls.classList.add('hidden');
     gameoverScreen.classList.remove('hidden');
     
+    fetchLeaderboard();
     submitScore(currentUsername, score);
 }
 
@@ -1349,11 +1350,27 @@ function showMenu() {
 }
 
 function fetchLeaderboard() {
-    fetch('/api/leaderboard')
-        .then(response => response.json())
+    const timestamp = Date.now();
+    fetch('/api/leaderboard?t=' + timestamp, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            renderLeaderboard(data.leaderboard, leaderboardList);
-            renderLeaderboard(data.leaderboard, gameoverLeaderboardList);
+            console.log('Leaderboard fetched:', data);
+            if (data && data.leaderboard) {
+                renderLeaderboard(data.leaderboard, leaderboardList);
+                renderLeaderboard(data.leaderboard, gameoverLeaderboardList);
+            }
         })
         .catch(error => {
             console.error('Error fetching leaderboard:', error);
