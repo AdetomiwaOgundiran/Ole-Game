@@ -112,7 +112,7 @@ function setupLights() {
 function createPlayer() {
     player = new THREE.Group();
     
-    const bodyGeom = new THREE.CapsuleGeometry(0.4, 1.2, 8, 16);
+    const bodyGeom = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
     const bodyMat = new THREE.MeshLambertMaterial({ color: 0x8b7355 });
     const body = new THREE.Mesh(bodyGeom, bodyMat);
     body.position.y = 1;
