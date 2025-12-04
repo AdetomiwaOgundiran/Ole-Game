@@ -792,15 +792,15 @@ function updateHearts() {
 }
 
 function moveLeft() {
-    if (currentLane > 0 && gameState === 'PLAYING') {
-        currentLane--;
+    if (currentLane < 2 && gameState === 'PLAYING') {
+        currentLane++;
         targetLaneX = GAME_CONFIG.lanes[currentLane];
     }
 }
 
 function moveRight() {
-    if (currentLane < 2 && gameState === 'PLAYING') {
-        currentLane++;
+    if (currentLane > 0 && gameState === 'PLAYING') {
+        currentLane--;
         targetLaneX = GAME_CONFIG.lanes[currentLane];
     }
 }
