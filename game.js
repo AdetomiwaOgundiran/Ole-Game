@@ -61,8 +61,8 @@ function init() {
     
     try {
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87ceeb);
-        scene.fog = new THREE.Fog(0x87ceeb, 50, 150);
+        scene.background = new THREE.Color(0x7ec8e3);
+        scene.fog = new THREE.Fog(0xc9a86c, 80, 200);
         
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 8, -12);
@@ -77,6 +77,7 @@ function init() {
         
         setupLights();
         createPlayer();
+        createSkyBackground();
         createInitialEnvironment();
         
         if (bestScoreElement) bestScoreElement.textContent = bestScore;
@@ -314,6 +315,178 @@ function createBuilding(x, z) {
     return building;
 }
 
+function createPalmTree(x, z) {
+    const palm = new THREE.Group();
+    
+    const trunkGeom = new THREE.CylinderGeometry(0.15, 0.25, 4, 8);
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+    const trunk = new THREE.Mesh(trunkGeom, trunkMat);
+    trunk.position.y = 2;
+    palm.add(trunk);
+    
+    const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22, side: THREE.DoubleSide });
+    for (let i = 0; i < 7; i++) {
+        const leafGeom = new THREE.PlaneGeometry(0.5, 2.5);
+        const leaf = new THREE.Mesh(leafGeom, leafMat);
+        leaf.position.y = 4;
+        leaf.rotation.y = (i / 7) * Math.PI * 2;
+        leaf.rotation.x = -0.5;
+        palm.add(leaf);
+    }
+    
+    palm.position.set(x, 0, z);
+    palm.rotation.y = Math.random() * Math.PI * 2;
+    palm.scale.setScalar(0.8 + Math.random() * 0.4);
+    return palm;
+}
+
+function createBillboard(x, z) {
+    const billboard = new THREE.Group();
+    
+    const poleGeom = new THREE.CylinderGeometry(0.1, 0.1, 5, 8);
+    const poleMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
+    const pole = new THREE.Mesh(poleGeom, poleMat);
+    pole.position.y = 2.5;
+    billboard.add(pole);
+    
+    const boardGeom = new THREE.BoxGeometry(4, 2, 0.2);
+    const boardColors = [0xff6600, 0x00aa00, 0xffcc00, 0x0066cc, 0xff0066];
+    const boardMat = new THREE.MeshLambertMaterial({ color: boardColors[Math.floor(Math.random() * boardColors.length)] });
+    const board = new THREE.Mesh(boardGeom, boardMat);
+    board.position.y = 6;
+    billboard.add(board);
+    
+    const frameGeom = new THREE.BoxGeometry(4.2, 2.2, 0.1);
+    const frameMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    const frame = new THREE.Mesh(frameGeom, frameMat);
+    frame.position.set(0, 6, -0.1);
+    billboard.add(frame);
+    
+    billboard.position.set(x, 0, z);
+    billboard.rotation.y = x > 0 ? -0.3 : 0.3;
+    return billboard;
+}
+
+function createSkylineBuilding(x, z) {
+    const building = new THREE.Group();
+    
+    const height = 15 + Math.random() * 25;
+    const width = 4 + Math.random() * 6;
+    const depth = 4 + Math.random() * 4;
+    
+    const colors = [0x4a4a4a, 0x5a5a5a, 0x6a6a6a, 0x3a3a4a, 0x4a4a5a];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    const bodyGeom = new THREE.BoxGeometry(width, height, depth);
+    const bodyMat = new THREE.MeshLambertMaterial({ color: color });
+    const body = new THREE.Mesh(bodyGeom, bodyMat);
+    body.position.y = height / 2;
+    building.add(body);
+    
+    const windowMat = new THREE.MeshBasicMaterial({ color: 0xffffaa, transparent: true, opacity: 0.6 });
+    const numWindows = 2 + Math.floor(Math.random() * 3);
+    for (let w = 0; w < numWindows; w++) {
+        const winGeom = new THREE.BoxGeometry(0.8, height * 0.6, 0.1);
+        const win = new THREE.Mesh(winGeom, windowMat);
+        win.position.set(-width / 2 + 1 + w * (width / numWindows), height / 2, depth / 2 + 0.05);
+        building.add(win);
+    }
+    
+    building.position.set(x, 0, z);
+    return building;
+}
+
+function createCloud(x, y, z) {
+    const cloud = new THREE.Group();
+    
+    const cloudMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+    
+    const numPuffs = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < numPuffs; i++) {
+        const size = 1 + Math.random() * 2;
+        const puffGeom = new THREE.SphereGeometry(size, 8, 8);
+        const puff = new THREE.Mesh(puffGeom, cloudMat);
+        puff.position.set(
+            (Math.random() - 0.5) * 4,
+            (Math.random() - 0.5) * 1,
+            (Math.random() - 0.5) * 2
+        );
+        puff.scale.y = 0.6;
+        cloud.add(puff);
+    }
+    
+    cloud.position.set(x, y, z);
+    cloud.userData.speed = 0.01 + Math.random() * 0.02;
+    return cloud;
+}
+
+function createSun() {
+    const sun = new THREE.Group();
+    
+    const sunGeom = new THREE.SphereGeometry(8, 16, 16);
+    const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd00 });
+    const sunMesh = new THREE.Mesh(sunGeom, sunMat);
+    sun.add(sunMesh);
+    
+    const glowGeom = new THREE.SphereGeometry(12, 16, 16);
+    const glowMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.3 });
+    const glow = new THREE.Mesh(glowGeom, glowMat);
+    sun.add(glow);
+    
+    sun.position.set(50, 60, 200);
+    return sun;
+}
+
+let clouds = [];
+let skylineBuildings = [];
+let sunObject = null;
+
+function createSkyBackground() {
+    sunObject = createSun();
+    scene.add(sunObject);
+    
+    for (let i = 0; i < 8; i++) {
+        const cloud = createCloud(
+            (Math.random() - 0.5) * 100,
+            25 + Math.random() * 15,
+            50 + Math.random() * 150
+        );
+        scene.add(cloud);
+        clouds.push(cloud);
+    }
+    
+    for (let i = 0; i < 15; i++) {
+        const side = i % 2 === 0 ? -1 : 1;
+        const building = createSkylineBuilding(
+            side * (35 + Math.random() * 20),
+            i * 30 + Math.random() * 20
+        );
+        scene.add(building);
+        skylineBuildings.push(building);
+    }
+}
+
+function updateSkyElements() {
+    if (!player) return;
+    
+    clouds.forEach(cloud => {
+        cloud.position.x += cloud.userData.speed;
+        if (cloud.position.x > 60) {
+            cloud.position.x = -60;
+        }
+    });
+    
+    if (sunObject) {
+        sunObject.position.z = player.position.z + 200;
+    }
+    
+    skylineBuildings.forEach(building => {
+        if (building.position.z < player.position.z - 50) {
+            building.position.z += 450;
+        }
+    });
+}
+
 function createTire(lane, z) {
     const tire = new THREE.Group();
     tire.userData = { type: 'obstacle', obstacleType: 'tire' };
@@ -526,6 +699,29 @@ function createEnvironmentForSegment(zPos) {
             scene.add(rightBuilding);
             environmentObjects.push(rightBuilding);
         }
+    }
+    
+    for (let i = 0; i < 2; i++) {
+        const z = zPos - GAME_CONFIG.segmentLength / 2 + i * 20 + Math.random() * 10;
+        
+        if (Math.random() > 0.5) {
+            const leftPalm = createPalmTree(-10 - Math.random() * 2, z);
+            scene.add(leftPalm);
+            environmentObjects.push(leftPalm);
+        }
+        
+        if (Math.random() > 0.5) {
+            const rightPalm = createPalmTree(10 + Math.random() * 2, z);
+            scene.add(rightPalm);
+            environmentObjects.push(rightPalm);
+        }
+    }
+    
+    if (Math.random() > 0.7) {
+        const side = Math.random() > 0.5 ? 1 : -1;
+        const billboard = createBillboard(side * (12 + Math.random() * 3), zPos + Math.random() * 30);
+        scene.add(billboard);
+        environmentObjects.push(billboard);
     }
 }
 
@@ -792,15 +988,15 @@ function updateHearts() {
 }
 
 function moveLeft() {
-    if (currentLane < 2 && gameState === 'PLAYING') {
-        currentLane++;
+    if (currentLane > 0 && gameState === 'PLAYING') {
+        currentLane--;
         targetLaneX = GAME_CONFIG.lanes[currentLane];
     }
 }
 
 function moveRight() {
-    if (currentLane > 0 && gameState === 'PLAYING') {
-        currentLane--;
+    if (currentLane < 2 && gameState === 'PLAYING') {
+        currentLane++;
         targetLaneX = GAME_CONFIG.lanes[currentLane];
     }
 }
@@ -992,6 +1188,8 @@ function animate() {
     requestAnimationFrame(animate);
     
     const delta = clock.getDelta();
+    
+    updateSkyElements();
     
     if (gameState === 'PLAYING') {
         gameSpeed = Math.min(gameSpeed + GAME_CONFIG.speedIncrement, GAME_CONFIG.maxSpeed);
