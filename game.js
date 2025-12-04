@@ -6,9 +6,9 @@ const GAME_CONFIG = {
     jumpDuration: 0.5,
     slideDuration: 0.6,
     spawnDistance: 60,
-    despawnDistance: -20,
+    despawnDistance: -40,
     segmentLength: 50,
-    numSegments: 5,
+    numSegments: 6,
     initialHealth: 3,
     itemScores: {
         money: 10,
@@ -678,7 +678,7 @@ function createInitialEnvironment() {
     groundPlane.receiveShadow = true;
     scene.add(groundPlane);
     
-    for (let i = 0; i < GAME_CONFIG.numSegments; i++) {
+    for (let i = -1; i < GAME_CONFIG.numSegments; i++) {
         const z = i * GAME_CONFIG.segmentLength;
         const segment = createRoadSegment(z);
         roadSegments.push(segment);
@@ -1287,10 +1287,10 @@ function resetGame() {
         environmentObjects = [];
         
         roadSegments.forEach((segment, i) => {
-            segment.position.z = i * GAME_CONFIG.segmentLength;
+            segment.position.z = (i - 1) * GAME_CONFIG.segmentLength;
         });
         
-        for (let i = 0; i < GAME_CONFIG.numSegments; i++) {
+        for (let i = -1; i < GAME_CONFIG.numSegments; i++) {
             createEnvironmentForSegment(i * GAME_CONFIG.segmentLength);
         }
         
