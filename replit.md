@@ -64,9 +64,8 @@ Game settings can be tweaked in `game.js` under `GAME_CONFIG`:
 ```javascript
 const GAME_CONFIG = {
     lanes: [-3, 0, 3],           // Lane X positions
-    initialSpeed: 0.3,            // Starting speed
-    maxSpeed: 0.8,                // Maximum speed
-    speedIncrement: 0.0001,       // Speed increase per frame
+    initialSpeed: 0.2,            // Starting speed
+    maxSpeed: 1.0,                // Maximum speed
     jumpHeight: 3,                // Jump arc height
     jumpDuration: 0.5,            // Jump time in seconds
     slideDuration: 0.6,           // Slide time in seconds
@@ -80,6 +79,27 @@ const GAME_CONFIG = {
     }
 };
 ```
+
+## Progressive Difficulty System
+
+The game features 9 difficulty levels that increase based on distance traveled:
+
+| Level | Distance | Speed | Obstacle Chance | Max Obstacles | Collectible Chance |
+|-------|----------|-------|-----------------|---------------|-------------------|
+| 1 | 0 | 0.20 | 25% | 1 | 80% |
+| 2 | 100 | 0.28 | 35% | 1 | 70% |
+| 3 | 250 | 0.38 | 45% | 1 | 60% |
+| 4 | 450 | 0.48 | 55% | 2 | 55% |
+| 5 | 700 | 0.58 | 65% | 2 | 50% |
+| 6 | 1000 | 0.68 | 75% | 2 | 45% |
+| 7 | 1400 | 0.78 | 80% | 3 | 40% |
+| 8 | 1900 | 0.88 | 85% | 3 | 35% |
+| 9 | 2500 | 1.00 | 90% | 3 | 30% |
+
+As you progress:
+- Game speed increases noticeably at each tier
+- More obstacles spawn per wave (up to 3 at highest levels)
+- Collectibles become rarer, making each one more valuable
 
 ## Leaderboard System
 
@@ -122,6 +142,8 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 4, 2025: Added progressive difficulty system with 9 levels - speed and obstacles increase over distance
+- December 4, 2025: Redesigned mobile controls to D-pad layout centered at bottom of screen
 - December 4, 2025: Fixed environment reset bug - road segments and environment objects now properly reset on game restart
 - December 4, 2025: Added initial item spawning (z=15-120) for immediate player engagement
 - December 4, 2025: Reduced spawn distance from 100 to 60 for more frequent items

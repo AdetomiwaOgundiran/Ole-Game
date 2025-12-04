@@ -1,8 +1,7 @@
 const GAME_CONFIG = {
     lanes: [-3, 0, 3],
-    initialSpeed: 0.3,
-    maxSpeed: 0.8,
-    speedIncrement: 0.0001,
+    initialSpeed: 0.2,
+    maxSpeed: 1.0,
     jumpHeight: 3,
     jumpDuration: 0.5,
     slideDuration: 0.6,
@@ -15,8 +14,23 @@ const GAME_CONFIG = {
         money: 10,
         phone: 20,
         food: 5
+    },
+    difficulty: {
+        levels: [
+            { distance: 0,    speed: 0.20, obstacleChance: 0.25, maxObstacles: 1, collectibleChance: 0.8 },
+            { distance: 100,  speed: 0.28, obstacleChance: 0.35, maxObstacles: 1, collectibleChance: 0.7 },
+            { distance: 250,  speed: 0.38, obstacleChance: 0.45, maxObstacles: 1, collectibleChance: 0.6 },
+            { distance: 450,  speed: 0.48, obstacleChance: 0.55, maxObstacles: 2, collectibleChance: 0.55 },
+            { distance: 700,  speed: 0.58, obstacleChance: 0.65, maxObstacles: 2, collectibleChance: 0.5 },
+            { distance: 1000, speed: 0.68, obstacleChance: 0.75, maxObstacles: 2, collectibleChance: 0.45 },
+            { distance: 1400, speed: 0.78, obstacleChance: 0.80, maxObstacles: 3, collectibleChance: 0.4 },
+            { distance: 1900, speed: 0.88, obstacleChance: 0.85, maxObstacles: 3, collectibleChance: 0.35 },
+            { distance: 2500, speed: 1.00, obstacleChance: 0.90, maxObstacles: 3, collectibleChance: 0.3 }
+        ]
     }
 };
+
+let currentDifficultyLevel = 0;
 
 let scene, camera, renderer, clock;
 let player, playerBox;
@@ -734,36 +748,42 @@ function createEnvironmentForSegment(zPos) {
     }
 }
 
+function getCurrentDifficulty() {
+    const distance = player ? player.position.z : 0;
+    const levels = GAME_CONFIG.difficulty.levels;
+    
+    let currentLevel = levels[0];
+    for (let i = levels.length - 1; i >= 0; i--) {
+        if (distance >= levels[i].distance) {
+            currentLevel = levels[i];
+            currentDifficultyLevel = i;
+            break;
+        }
+    }
+    
+    return currentLevel;
+}
+
+function updateDifficulty() {
+    const difficulty = getCurrentDifficulty();
+    gameSpeed = difficulty.speed;
+}
+
 function spawnItems() {
     const spawnZ = player.position.z + GAME_CONFIG.spawnDistance;
+    const difficulty = getCurrentDifficulty();
     
-    if (spawnZ - lastSpawnZ < 8) return;
+    const minSpawnGap = Math.max(6, 10 - currentDifficultyLevel);
+    if (spawnZ - lastSpawnZ < minSpawnGap) return;
     
     lastSpawnZ = spawnZ;
     
     const occupiedLanes = [];
     
-    if (Math.random() > 0.4) {
-        const lane = Math.floor(Math.random() * 3);
-        occupiedLanes.push(lane);
-        
-        const obstacleType = Math.random();
-        let obstacle;
-        
-        if (obstacleType < 0.4) {
-            obstacle = createTire(lane, spawnZ);
-        } else if (obstacleType < 0.7) {
-            obstacle = createThorns(lane, spawnZ);
-        } else {
-            obstacle = createElectricWire(lane, spawnZ);
-        }
-        
-        scene.add(obstacle);
-        obstacles.push(obstacle);
-    }
+    const numObstacles = Math.random() < difficulty.obstacleChance ? 
+        Math.floor(Math.random() * difficulty.maxObstacles) + 1 : 0;
     
-    const numCollectibles = Math.floor(Math.random() * 3) + 1;
-    for (let i = 0; i < numCollectibles; i++) {
+    for (let o = 0; o < numObstacles; o++) {
         let lane;
         let attempts = 0;
         do {
@@ -773,20 +793,53 @@ function spawnItems() {
         
         if (attempts >= 10) continue;
         
-        const offsetZ = spawnZ + i * 3;
-        const itemType = Math.random();
-        let collectible;
+        occupiedLanes.push(lane);
         
-        if (itemType < 0.4) {
-            collectible = Math.random() > 0.5 ? createMoney(lane, offsetZ) : createCoin(lane, offsetZ);
-        } else if (itemType < 0.6) {
-            collectible = createPhone(lane, offsetZ);
+        const obstacleType = Math.random();
+        let obstacle;
+        const offsetZ = spawnZ + o * 4;
+        
+        if (obstacleType < 0.4) {
+            obstacle = createTire(lane, offsetZ);
+        } else if (obstacleType < 0.7) {
+            obstacle = createThorns(lane, offsetZ);
         } else {
-            collectible = createFood(lane, offsetZ);
+            obstacle = createElectricWire(lane, offsetZ);
         }
         
-        scene.add(collectible);
-        collectibles.push(collectible);
+        scene.add(obstacle);
+        obstacles.push(obstacle);
+    }
+    
+    if (Math.random() < difficulty.collectibleChance) {
+        const maxCollectibles = Math.max(1, 3 - Math.floor(currentDifficultyLevel / 3));
+        const numCollectibles = Math.floor(Math.random() * maxCollectibles) + 1;
+        
+        for (let i = 0; i < numCollectibles; i++) {
+            let lane;
+            let attempts = 0;
+            do {
+                lane = Math.floor(Math.random() * 3);
+                attempts++;
+            } while (occupiedLanes.includes(lane) && attempts < 10);
+            
+            if (attempts >= 10) continue;
+            
+            const offsetZ = spawnZ + i * 3 + (numObstacles > 0 ? 8 : 0);
+            const itemType = Math.random();
+            let collectible;
+            
+            if (itemType < 0.4) {
+                collectible = Math.random() > 0.5 ? createMoney(lane, offsetZ) : createCoin(lane, offsetZ);
+            } else if (itemType < 0.6) {
+                collectible = createPhone(lane, offsetZ);
+            } else {
+                collectible = createFood(lane, offsetZ);
+            }
+            
+            scene.add(collectible);
+            collectibles.push(collectible);
+        }
     }
 }
 
@@ -1163,6 +1216,7 @@ function resetGame() {
         score = 0;
         health = GAME_CONFIG.initialHealth;
         gameSpeed = GAME_CONFIG.initialSpeed;
+        currentDifficultyLevel = 0;
         currentLane = 1;
         targetLaneX = 0;
         isJumping = false;
@@ -1345,7 +1399,7 @@ function animate() {
     updateSkyElements();
     
     if (gameState === 'PLAYING') {
-        gameSpeed = Math.min(gameSpeed + GAME_CONFIG.speedIncrement, GAME_CONFIG.maxSpeed);
+        updateDifficulty();
         
         updatePlayer(delta);
         updateRoad();
