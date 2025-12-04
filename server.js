@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 const PORT = 5000;
 
@@ -17,7 +18,8 @@ const mimeTypes = {
 };
 
 const server = http.createServer((req, res) => {
-    let filePath = req.url === '/' ? '/index.html' : req.url;
+    const parsedUrl = url.parse(req.url);
+    let filePath = parsedUrl.pathname === '/' ? '/index.html' : parsedUrl.pathname;
     filePath = '.' + filePath;
     
     const extname = path.extname(filePath).toLowerCase();
@@ -35,7 +37,9 @@ const server = http.createServer((req, res) => {
         } else {
             res.writeHead(200, { 
                 'Content-Type': contentType,
-                'Cache-Control': 'no-cache, no-store, must-revalidate'
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             });
             res.end(content, 'utf-8');
         }
