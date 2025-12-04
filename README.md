@@ -2,7 +2,7 @@
 
 **A culturally-authentic 3D endless runner game celebrating Lagos street life**
 
-[Play Now](https://ole-the-lagos-hustle.replit.app) | [Product Decisions](./PRODUCT_DECISIONS.md)
+[Play Now](https://ole-game.com) | [Product Decisions](./PRODUCT_DECISIONS.md)
 
 ![Game Preview](https://img.shields.io/badge/Platform-Web-blue) ![Tech](https://img.shields.io/badge/Built%20with-Three.js-green) ![Status](https://img.shields.io/badge/Status-Live-success)
 
