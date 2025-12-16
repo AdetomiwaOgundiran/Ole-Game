@@ -162,6 +162,9 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 16, 2025: Added procedural background music with mute/unmute toggle button in HUD
+- December 16, 2025: Added hurt sound effect when player loses a life
+- December 16, 2025: Made tire obstacle bigger (60% larger) with Nigerian flag colors (green-white-green stripes)
 - December 4, 2025: Migrated leaderboard storage from JSON file to PostgreSQL database for permanent persistence
 - December 4, 2025: Fixed camera and road positioning - road now always visible behind player, no ground plane showing
 - December 4, 2025: Rebalanced difficulty - reduced obstacle clustering, smoother progression curve, max 2 obstacles until very late game

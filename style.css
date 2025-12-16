@@ -263,6 +263,22 @@ html, body {
     align-items: flex-start;
 }
 
+.mute-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    font-size: 1.5rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.mute-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
 .score-container, .best-score-container {
     background: rgba(0, 0, 0, 0.6);
     padding: 10px 20px;

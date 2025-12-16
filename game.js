@@ -58,6 +58,160 @@ let currentUsername = '';
 
 let webglSupported = true;
 
+let audioContext = null;
+let isMuted = false;
+let bgMusicGain = null;
+let musicInterval = null;
+let bassInterval = null;
+
+function initAudio() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        bgMusicGain = audioContext.createGain();
+        bgMusicGain.connect(audioContext.destination);
+        bgMusicGain.gain.value = 0.3;
+        console.log('Audio initialized');
+    } catch (e) {
+        console.log('Web Audio not supported');
+    }
+}
+
+function playBackgroundMusic() {
+    if (!audioContext || isMuted) return;
+    
+    stopBackgroundMusic();
+    
+    const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
+    const rhythm = [0.25, 0.25, 0.5, 0.25, 0.25, 0.5, 0.5, 0.25];
+    let noteIndex = 0;
+    let rhythmIndex = 0;
+    
+    function playNote() {
+        if (!audioContext || isMuted || gameState !== 'PLAYING') {
+            stopBackgroundMusic();
+            return;
+        }
+        
+        const osc = audioContext.createOscillator();
+        const noteGain = audioContext.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.value = notes[noteIndex % notes.length] * (Math.random() > 0.7 ? 2 : 1);
+        
+        noteGain.gain.value = 0.15;
+        noteGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        
+        osc.connect(noteGain);
+        noteGain.connect(bgMusicGain);
+        
+        osc.start();
+        osc.stop(audioContext.currentTime + 0.25);
+        
+        noteIndex++;
+        rhythmIndex = (rhythmIndex + 1) % rhythm.length;
+        
+        musicInterval = setTimeout(playNote, rhythm[rhythmIndex] * 400);
+    }
+    
+    playNote();
+    
+    function playBass() {
+        if (!audioContext || isMuted || gameState !== 'PLAYING') return;
+        
+        const bassOsc = audioContext.createOscillator();
+        const bassGain = audioContext.createGain();
+        
+        bassOsc.type = 'sine';
+        bassOsc.frequency.value = 65.41;
+        
+        bassGain.gain.value = 0.2;
+        bassGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        
+        bassOsc.connect(bassGain);
+        bassGain.connect(bgMusicGain);
+        
+        bassOsc.start();
+        bassOsc.stop(audioContext.currentTime + 0.5);
+        
+        bassInterval = setTimeout(playBass, 800);
+    }
+    
+    playBass();
+}
+
+function stopBackgroundMusic() {
+    if (musicInterval) {
+        clearTimeout(musicInterval);
+        musicInterval = null;
+    }
+    if (bassInterval) {
+        clearTimeout(bassInterval);
+        bassInterval = null;
+    }
+}
+
+function playHurtSound() {
+    if (!audioContext || isMuted) return;
+    
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    
+    osc.type = 'sawtooth';
+    osc.frequency.value = 200;
+    osc.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.3);
+    
+    gain.gain.value = 0.3;
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.3);
+}
+
+function playCollectSound() {
+    if (!audioContext || isMuted) return;
+    
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.value = 523.25;
+    osc.frequency.exponentialRampToValueAtTime(1046.5, audioContext.currentTime + 0.1);
+    
+    gain.gain.value = 0.2;
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+    
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.15);
+}
+
+function toggleMute() {
+    isMuted = !isMuted;
+    
+    if (bgMusicGain) {
+        bgMusicGain.gain.value = isMuted ? 0 : 0.3;
+    }
+    
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        muteBtn.textContent = isMuted ? '🔇' : '🔊';
+    }
+    
+    if (isMuted) {
+        stopBackgroundMusic();
+    } else if (gameState === 'PLAYING') {
+        playBackgroundMusic();
+    }
+}
+
 function init() {
     console.log('Initializing game...');
     
@@ -514,13 +668,34 @@ function createTire(lane, z) {
     const tire = new THREE.Group();
     tire.userData = { type: 'obstacle', obstacleType: 'tire' };
     
-    const torusGeom = new THREE.TorusGeometry(0.5, 0.25, 8, 16);
-    const tireMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+    const torusGeom = new THREE.TorusGeometry(0.8, 0.35, 12, 24);
+    const tireMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
     const torus = new THREE.Mesh(torusGeom, tireMat);
     torus.rotation.x = Math.PI / 2;
-    torus.position.y = 0.25;
+    torus.position.y = 0.4;
     torus.castShadow = true;
     tire.add(torus);
+    
+    const stripeWidth = 0.12;
+    const stripeGeom = new THREE.TorusGeometry(0.82, stripeWidth, 8, 24);
+    
+    const greenMat = new THREE.MeshLambertMaterial({ color: 0x008751 });
+    const whiteMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    
+    const greenStripe1 = new THREE.Mesh(stripeGeom, greenMat);
+    greenStripe1.rotation.x = Math.PI / 2;
+    greenStripe1.position.y = 0.55;
+    tire.add(greenStripe1);
+    
+    const whiteStripe = new THREE.Mesh(stripeGeom, whiteMat);
+    whiteStripe.rotation.x = Math.PI / 2;
+    whiteStripe.position.y = 0.4;
+    tire.add(whiteStripe);
+    
+    const greenStripe2 = new THREE.Mesh(stripeGeom, greenMat);
+    greenStripe2.rotation.x = Math.PI / 2;
+    greenStripe2.position.y = 0.25;
+    tire.add(greenStripe2);
     
     tire.position.set(GAME_CONFIG.lanes[lane], 0, z);
     return tire;
@@ -1035,6 +1210,7 @@ function createCollectionEffect(position) {
 
 function takeDamage() {
     health--;
+    playHurtSound();
     updateHearts();
     
     if (health <= 0) {
@@ -1127,6 +1303,13 @@ function setupEventListeners() {
         menuBtn.addEventListener('click', function(e) {
             console.log('Menu button clicked');
             showMenu();
+        });
+    }
+    
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        muteBtn.addEventListener('click', function(e) {
+            toggleMute();
         });
     }
     
@@ -1238,6 +1421,10 @@ function startGame() {
             }
         }
         
+        if (!audioContext) {
+            initAudio();
+        }
+        
         gameState = 'PLAYING';
         if (menuScreen) menuScreen.classList.add('hidden');
         if (hudElement) hudElement.classList.remove('hidden');
@@ -1248,6 +1435,7 @@ function startGame() {
         }
         
         resetGame();
+        playBackgroundMusic();
         console.log('Game started successfully');
     } catch (e) {
         console.error('Error starting game:', e);
@@ -1349,6 +1537,7 @@ function spawnInitialItems() {
 
 function gameOver() {
     gameState = 'GAMEOVER';
+    stopBackgroundMusic();
     
     finalScoreElement.textContent = score;
     finalBestScoreElement.textContent = bestScore;
@@ -1368,6 +1557,7 @@ function restartGame() {
     
     resetGame();
     gameState = 'PLAYING';
+    playBackgroundMusic();
 }
 
 function showMenu() {
