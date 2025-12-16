@@ -304,73 +304,11 @@ html, body {
     border-radius: 10px;
 }
 
-.collectible-icon, .obstacle-icon {
-    width: 36px;
-    height: 36px;
+.item-canvas {
+    width: 50px;
+    height: 50px;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-shrink: 0;
-}
-
-.money-icon {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-}
-
-.money-icon::after {
-    content: '$';
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: white;
-}
-
-.phone-icon {
-    background: linear-gradient(135deg, #333 0%, #111 100%);
-    border: 2px solid #555;
-}
-
-.phone-icon::after {
-    content: '';
-    width: 20px;
-    height: 28px;
-    background: #444;
-    border-radius: 3px;
-}
-
-.food-icon {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-}
-
-.food-icon::after {
-    content: '';
-    font-size: 1.2rem;
-}
-
-.tire-icon {
-    background: linear-gradient(135deg, #008751 0%, #fff 50%, #008751 100%);
-    border-radius: 50%;
-    border: 3px solid #333;
-}
-
-.thorn-icon {
-    background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
-}
-
-.thorn-icon::after {
-    content: '▲';
-    color: #dc3545;
-    font-size: 1rem;
-}
-
-.wire-icon {
-    background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-    position: relative;
-}
-
-.wire-icon::after {
-    content: '⚡';
-    font-size: 1.2rem;
 }
 
 .collectible-name, .obstacle-name {

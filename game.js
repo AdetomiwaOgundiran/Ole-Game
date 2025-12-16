@@ -1572,6 +1572,121 @@ function restartGame() {
     playBackgroundMusic();
 }
 
+function drawInstructionIcons() {
+    const phoneCanvas = document.getElementById('phone-canvas');
+    if (phoneCanvas) {
+        const ctx = phoneCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.fillStyle = '#222222';
+        ctx.fillRect(10, 5, 30, 40);
+        ctx.fillStyle = '#333333';
+        ctx.fillRect(12, 8, 26, 30);
+        ctx.fillStyle = '#444444';
+        ctx.beginPath();
+        ctx.arc(25, 42, 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    
+    const moneyCanvas = document.getElementById('money-canvas');
+    if (moneyCanvas) {
+        const ctx = moneyCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.fillStyle = '#2ecc71';
+        ctx.fillRect(8, 15, 34, 20);
+        ctx.strokeStyle = '#27ae60';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(8, 15, 34, 20);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('₦', 25, 30);
+    }
+    
+    const foodCanvas = document.getElementById('food-canvas');
+    if (foodCanvas) {
+        const ctx = foodCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.fillStyle = '#f5f5dc';
+        ctx.beginPath();
+        ctx.ellipse(25, 28, 18, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#8B4513';
+        ctx.beginPath();
+        ctx.ellipse(18, 26, 6, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#e74c3c';
+        ctx.beginPath();
+        ctx.ellipse(30, 28, 8, 5, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#f1c40f';
+        ctx.fillRect(12, 32, 8, 3);
+        ctx.fillRect(28, 34, 10, 3);
+    }
+    
+    const tireCanvas = document.getElementById('tire-canvas');
+    if (tireCanvas) {
+        const ctx = tireCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.beginPath();
+        ctx.arc(25, 25, 18, 0, Math.PI * 2);
+        ctx.fillStyle = '#008751';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(25, 25, 12, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(25, 25, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#008751';
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(25, 25, 18, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+    
+    const thornCanvas = document.getElementById('thorn-canvas');
+    if (thornCanvas) {
+        const ctx = thornCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(5, 35, 40, 8);
+        ctx.fillStyle = '#dc3545';
+        for (let i = 0; i < 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(10 + i * 8, 35);
+            ctx.lineTo(14 + i * 8, 18);
+            ctx.lineTo(18 + i * 8, 35);
+            ctx.fill();
+        }
+    }
+    
+    const wireCanvas = document.getElementById('wire-canvas');
+    if (wireCanvas) {
+        const ctx = wireCanvas.getContext('2d');
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, 50, 50);
+        ctx.fillStyle = '#666666';
+        ctx.fillRect(5, 5, 4, 40);
+        ctx.fillRect(41, 5, 4, 40);
+        ctx.strokeStyle = '#f1c40f';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(9, 20);
+        ctx.lineTo(41, 20);
+        ctx.stroke();
+        ctx.fillStyle = '#f39c12';
+        ctx.font = '16px Arial';
+        ctx.fillText('⚡', 20, 38);
+    }
+}
+
 function showInstructionsScreen() {
     const username = usernameInput.value.trim();
     if (username.length === 0) return;
@@ -1584,6 +1699,8 @@ function showInstructionsScreen() {
         instructionsScreen.classList.remove('hidden');
     }
     gameState = 'INSTRUCTIONS';
+    
+    drawInstructionIcons();
 }
 
 function showMenu() {

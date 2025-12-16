@@ -41,6 +41,8 @@
             <div class="instructions-content">
                 <h2 class="instructions-title">How to Play</h2>
                 
+                <button id="play-btn" class="game-btn pulse-btn">Let's Go!</button>
+                
                 <div class="instructions-section">
                     <h3>Goal</h3>
                     <p>Run through Lagos streets, collect valuables, and survive as long as you can!</p>
@@ -50,17 +52,17 @@
                     <h3>Collectibles</h3>
                     <div class="collectibles-grid">
                         <div class="collectible-item">
-                            <span class="collectible-icon money-icon"></span>
-                            <span class="collectible-name">Money</span>
-                            <span class="collectible-points">+10 pts</span>
-                        </div>
-                        <div class="collectible-item">
-                            <span class="collectible-icon phone-icon"></span>
+                            <canvas class="item-canvas" id="phone-canvas" width="50" height="50"></canvas>
                             <span class="collectible-name">Phone</span>
                             <span class="collectible-points">+20 pts</span>
                         </div>
                         <div class="collectible-item">
-                            <span class="collectible-icon food-icon"></span>
+                            <canvas class="item-canvas" id="money-canvas" width="50" height="50"></canvas>
+                            <span class="collectible-name">Money</span>
+                            <span class="collectible-points">+10 pts</span>
+                        </div>
+                        <div class="collectible-item">
+                            <canvas class="item-canvas" id="food-canvas" width="50" height="50"></canvas>
                             <span class="collectible-name">Food</span>
                             <span class="collectible-points">+5 pts</span>
                         </div>
@@ -71,17 +73,17 @@
                     <h3>Obstacles</h3>
                     <div class="obstacles-grid">
                         <div class="obstacle-item">
-                            <span class="obstacle-icon tire-icon"></span>
+                            <canvas class="item-canvas" id="tire-canvas" width="50" height="50"></canvas>
                             <span class="obstacle-name">Tires</span>
                             <span class="obstacle-action">Jump over</span>
                         </div>
                         <div class="obstacle-item">
-                            <span class="obstacle-icon thorn-icon"></span>
+                            <canvas class="item-canvas" id="thorn-canvas" width="50" height="50"></canvas>
                             <span class="obstacle-name">Thorns</span>
                             <span class="obstacle-action">Jump over</span>
                         </div>
                         <div class="obstacle-item">
-                            <span class="obstacle-icon wire-icon"></span>
+                            <canvas class="item-canvas" id="wire-canvas" width="50" height="50"></canvas>
                             <span class="obstacle-name">Wires</span>
                             <span class="obstacle-action">Slide under</span>
                         </div>
@@ -93,8 +95,6 @@
                     <p>← → or A/D to move lanes</p>
                     <p>↑ or W to jump | ↓ or S to slide</p>
                 </div>
-                
-                <button id="play-btn" class="game-btn pulse-btn">Let's Go!</button>
             </div>
         </div>
         
