@@ -748,6 +748,69 @@ function createElectricWire(lane, z) {
         wire.add(w);
     }
     
+    // Barbed wire on top - highly visible red/yellow warning
+    const barbedWireGroup = new THREE.Group();
+    
+    // Main barbed wire coil (twisted wire look)
+    const coilMat = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+    const coilWireMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    
+    // Create twisted coil effect along the top
+    for (let i = 0; i < 12; i++) {
+        const coilSegment = new THREE.TorusGeometry(0.15, 0.03, 6, 8);
+        const coil = new THREE.Mesh(coilSegment, coilWireMat);
+        coil.position.set(-1.35 + i * 0.25, 0, 0);
+        coil.rotation.y = Math.PI / 2 + (i * 0.3);
+        barbedWireGroup.add(coil);
+    }
+    
+    // Add sharp barb spikes (bright red for visibility)
+    const barbGeom = new THREE.ConeGeometry(0.06, 0.2, 4);
+    const barbMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    
+    for (let i = 0; i < 20; i++) {
+        const barb = new THREE.Mesh(barbGeom, barbMat);
+        const xPos = -1.4 + i * 0.15;
+        const yOffset = Math.sin(i * 0.8) * 0.1;
+        barb.position.set(xPos, yOffset, 0);
+        barb.rotation.z = Math.random() * Math.PI - Math.PI / 2;
+        barb.rotation.x = Math.random() * 0.5 - 0.25;
+        barbedWireGroup.add(barb);
+        
+        // Add barbs facing other directions too
+        const barb2 = new THREE.Mesh(barbGeom, barbMat);
+        barb2.position.set(xPos, yOffset, 0.1);
+        barb2.rotation.x = Math.PI / 4;
+        barb2.rotation.z = Math.random() * Math.PI;
+        barbedWireGroup.add(barb2);
+        
+        const barb3 = new THREE.Mesh(barbGeom, barbMat);
+        barb3.position.set(xPos, yOffset, -0.1);
+        barb3.rotation.x = -Math.PI / 4;
+        barb3.rotation.z = Math.random() * Math.PI;
+        barbedWireGroup.add(barb3);
+    }
+    
+    // Add yellow caution stripe bar
+    const cautionBarGeom = new THREE.BoxGeometry(3.2, 0.12, 0.12);
+    const cautionBarMat = new THREE.MeshLambertMaterial({ color: 0xffcc00 });
+    const cautionBar = new THREE.Mesh(cautionBarGeom, cautionBarMat);
+    cautionBar.position.set(0, 0.25, 0);
+    barbedWireGroup.add(cautionBar);
+    
+    // Add red warning stripes on the caution bar
+    const stripeGeom = new THREE.BoxGeometry(0.15, 0.13, 0.13);
+    const stripeMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    for (let i = 0; i < 8; i++) {
+        const stripe = new THREE.Mesh(stripeGeom, stripeMat);
+        stripe.position.set(-1.4 + i * 0.4, 0.25, 0);
+        barbedWireGroup.add(stripe);
+    }
+    
+    // Position barbed wire on top of poles
+    barbedWireGroup.position.y = 4;
+    wire.add(barbedWireGroup);
+    
     wire.position.set(GAME_CONFIG.lanes[lane], 0, z);
     return wire;
 }
