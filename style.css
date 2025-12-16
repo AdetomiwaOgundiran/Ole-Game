@@ -387,22 +387,22 @@ html, body {
 
 .score-container, .best-score-container {
     background: rgba(0, 0, 0, 0.6);
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 5px 12px;
+    border-radius: 8px;
     text-align: center;
 }
 
 .score-label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     color: #888;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 
 #score, #best-score {
     display: block;
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #ffd700;
 }
