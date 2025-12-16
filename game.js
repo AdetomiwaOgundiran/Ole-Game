@@ -1027,12 +1027,12 @@ function updateDifficulty() {
     
     const minSpeed = GAME_CONFIG.initialSpeed;
     const maxSpeed = GAME_CONFIG.maxSpeed;
-    const rampDistance = 2000;
+    const rampDistance = 3200;
     
+    // Linear progression for consistent speed increase throughout the game
     const progress = Math.min(distance / rampDistance, 1);
-    const easedProgress = 1 - Math.pow(1 - progress, 2);
     
-    const newSpeed = minSpeed + (maxSpeed - minSpeed) * easedProgress;
+    const newSpeed = minSpeed + (maxSpeed - minSpeed) * progress;
     
     gameSpeed = Math.max(gameSpeed, newSpeed);
 }
