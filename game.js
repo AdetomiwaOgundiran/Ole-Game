@@ -759,6 +759,44 @@ function createElectricWire(lane, z) {
         wire.add(w);
     }
     
+    // Wire mesh/net in the middle compartment - makes it clear you cannot pass through
+    const netWireMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+    const netWireGeomH = new THREE.CylinderGeometry(0.02, 0.02, 3.0, 6);
+    const netWireGeomV = new THREE.CylinderGeometry(0.02, 0.02, 2.3, 6);
+    
+    // Horizontal wires across the middle section
+    for (let i = 0; i < 8; i++) {
+        const hWire = new THREE.Mesh(netWireGeomH, netWireMat);
+        hWire.rotation.z = Math.PI / 2;
+        hWire.position.set(0, 1.6 + i * 0.3, 0);
+        wire.add(hWire);
+    }
+    
+    // Vertical wires creating a grid/net pattern
+    for (let i = 0; i < 7; i++) {
+        const vWire = new THREE.Mesh(netWireGeomV, netWireMat);
+        vWire.position.set(-1.35 + i * 0.45, 2.75, 0);
+        wire.add(vWire);
+    }
+    
+    // Diagonal cross wires for extra visibility
+    const diagWireGeom = new THREE.CylinderGeometry(0.015, 0.015, 3.8, 6);
+    const diagWireMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    
+    for (let i = 0; i < 4; i++) {
+        // Diagonal going one way
+        const diag1 = new THREE.Mesh(diagWireGeom, diagWireMat);
+        diag1.position.set(-1.1 + i * 0.75, 2.75, 0);
+        diag1.rotation.z = Math.PI / 4;
+        wire.add(diag1);
+        
+        // Diagonal going other way
+        const diag2 = new THREE.Mesh(diagWireGeom, diagWireMat);
+        diag2.position.set(-1.1 + i * 0.75, 2.75, 0);
+        diag2.rotation.z = -Math.PI / 4;
+        wire.add(diag2);
+    }
+    
     // Barbed wire on top - highly visible red/yellow warning
     const barbedWireGroup = new THREE.Group();
     
