@@ -470,7 +470,7 @@ html, body {
 
 #mobile-controls {
     position: absolute;
-    bottom: 30px;
+    bottom: 100px;
     left: 0;
     width: 100%;
     z-index: 60;
@@ -484,7 +484,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     pointer-events: auto;
 }
 
@@ -494,13 +494,13 @@ html, body {
 }
 
 .mobile-btn {
-    width: 65px;
-    height: 65px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.6);
-    background: rgba(0, 0, 0, 0.5);
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.6);
     color: white;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
     touch-action: manipulation;
     user-select: none;
