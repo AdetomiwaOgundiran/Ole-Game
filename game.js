@@ -1580,7 +1580,7 @@ function drawInstructionIcons() {
         ctx.fillRect(0, 0, 50, 50);
         ctx.fillStyle = '#222222';
         ctx.fillRect(10, 5, 30, 40);
-        ctx.fillStyle = '#333333';
+        ctx.fillStyle = '#4488ff';
         ctx.fillRect(12, 8, 26, 30);
         ctx.fillStyle = '#444444';
         ctx.beginPath();
@@ -1629,21 +1629,21 @@ function drawInstructionIcons() {
     const tireCanvas = document.getElementById('tire-canvas');
     if (tireCanvas) {
         const ctx = tireCanvas.getContext('2d');
-        ctx.fillStyle = '#1a1a2e';
+        ctx.fillStyle = '#8B7355';
         ctx.fillRect(0, 0, 50, 50);
         ctx.beginPath();
         ctx.arc(25, 25, 18, 0, Math.PI * 2);
-        ctx.fillStyle = '#008751';
+        ctx.fillStyle = '#1a1a1a';
         ctx.fill();
         ctx.beginPath();
         ctx.arc(25, 25, 12, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#333333';
         ctx.fill();
         ctx.beginPath();
         ctx.arc(25, 25, 6, 0, Math.PI * 2);
-        ctx.fillStyle = '#008751';
+        ctx.fillStyle = '#1a1a1a';
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(25, 25, 18, 0, Math.PI * 2);
