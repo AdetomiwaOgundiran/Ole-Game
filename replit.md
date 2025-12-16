@@ -48,9 +48,9 @@ Mobile controls are also available on smaller screens.
 - **Food (plates with rice/stew/plantain)**: +5 points
 
 ### Obstacles
-- **Tires**: Jump over them
-- **Thorns/spikes**: Jump over them
-- **Electric wires**: Slide under them
+- **Tires**: Jump over them (green/white Nigerian flag colors)
+- **Traffic Spikes**: Jump over them (bright yellow with dark tips for visibility)
+- **Electric Wires**: Slide under them (features barbed wire on top and wire mesh in middle - cannot be jumped over)
 
 ### Health & Game Over
 - Player starts with 3 hearts
