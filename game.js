@@ -1287,9 +1287,17 @@ function setupEventListeners() {
     if (startBtn) {
         startBtn.addEventListener('click', function(e) {
             console.log('Start button clicked');
-            startGame();
+            showInstructionsScreen();
         });
         console.log('Start button listener attached');
+    }
+    
+    const playBtn = document.getElementById('play-btn');
+    if (playBtn) {
+        playBtn.addEventListener('click', function(e) {
+            console.log('Play button clicked');
+            startGame();
+        });
     }
     
     if (restartBtn) {
@@ -1316,8 +1324,8 @@ function setupEventListeners() {
     document.addEventListener('keydown', (e) => {
         console.log('Key pressed:', e.key, 'Game state:', gameState);
         
-        // Don't process game keys when on menu (let user type username)
-        if (gameState === 'MENU') {
+        // Don't process game keys when on menu or instructions (let user type username)
+        if (gameState === 'MENU' || gameState === 'INSTRUCTIONS') {
             return;
         }
         
@@ -1394,7 +1402,7 @@ function setupEventListeners() {
         
         usernameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && usernameInput.value.trim().length > 0) {
-                startGame();
+                showInstructionsScreen();
             }
         });
     }
@@ -1413,7 +1421,7 @@ function onWindowResize() {
 function startGame() {
     console.log('startGame called');
     try {
-        if (usernameInput) {
+        if (!currentUsername && usernameInput) {
             currentUsername = usernameInput.value.trim();
             if (currentUsername.length === 0) {
                 console.log('Username required');
@@ -1427,6 +1435,10 @@ function startGame() {
         
         gameState = 'PLAYING';
         if (menuScreen) menuScreen.classList.add('hidden');
+        
+        const instructionsScreen = document.getElementById('instructions-screen');
+        if (instructionsScreen) instructionsScreen.classList.add('hidden');
+        
         if (hudElement) hudElement.classList.remove('hidden');
         if (mobileControls) mobileControls.classList.remove('hidden');
         
@@ -1560,9 +1572,29 @@ function restartGame() {
     playBackgroundMusic();
 }
 
+function showInstructionsScreen() {
+    const username = usernameInput.value.trim();
+    if (username.length === 0) return;
+    
+    currentUsername = username;
+    menuScreen.classList.add('hidden');
+    
+    const instructionsScreen = document.getElementById('instructions-screen');
+    if (instructionsScreen) {
+        instructionsScreen.classList.remove('hidden');
+    }
+    gameState = 'INSTRUCTIONS';
+}
+
 function showMenu() {
     gameoverScreen.classList.add('hidden');
     menuScreen.classList.remove('hidden');
+    
+    const instructionsScreen = document.getElementById('instructions-screen');
+    if (instructionsScreen) {
+        instructionsScreen.classList.add('hidden');
+    }
+    
     gameState = 'MENU';
     fetchLeaderboard();
 }

@@ -162,6 +162,7 @@ The game includes enhanced visual elements for an authentic Lagos feel:
 
 ## Recent Changes
 
+- December 16, 2025: Added instruction screen before game starts showing goal, collectibles (with point values), obstacles, and controls
 - December 16, 2025: Added procedural background music with mute/unmute toggle button in HUD
 - December 16, 2025: Added hurt sound effect when player loses a life
 - December 16, 2025: Made tire obstacle bigger (60% larger) with Nigerian flag colors (green-white-green stripes)

@@ -247,6 +247,174 @@ html, body {
     font-size: 0.9rem;
 }
 
+#instructions-screen {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.97) 0%, rgba(45, 45, 80, 0.97) 100%);
+}
+
+.instructions-content {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    max-width: 420px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.instructions-title {
+    font-size: 2rem;
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.instructions-section {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.instructions-section h3 {
+    color: #ff6b35;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.instructions-section p {
+    color: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.collectibles-grid, .obstacles-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.collectible-item, .obstacle-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.collectible-icon, .obstacle-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.money-icon {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.money-icon::after {
+    content: '$';
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+}
+
+.phone-icon {
+    background: linear-gradient(135deg, #333 0%, #111 100%);
+    border: 2px solid #555;
+}
+
+.phone-icon::after {
+    content: '';
+    width: 20px;
+    height: 28px;
+    background: #444;
+    border-radius: 3px;
+}
+
+.food-icon {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.food-icon::after {
+    content: '';
+    font-size: 1.2rem;
+}
+
+.tire-icon {
+    background: linear-gradient(135deg, #008751 0%, #fff 50%, #008751 100%);
+    border-radius: 50%;
+    border: 3px solid #333;
+}
+
+.thorn-icon {
+    background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+}
+
+.thorn-icon::after {
+    content: '▲';
+    color: #dc3545;
+    font-size: 1rem;
+}
+
+.wire-icon {
+    background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+    position: relative;
+}
+
+.wire-icon::after {
+    content: '⚡';
+    font-size: 1.2rem;
+}
+
+.collectible-name, .obstacle-name {
+    flex: 1;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.collectible-points {
+    color: #2ecc71;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.obstacle-action {
+    color: #f39c12;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.controls-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.controls-section p {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.pulse-btn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 5px 25px rgba(255, 215, 0, 0.5);
+    }
+}
+
 #hud {
     position: absolute;
     top: 0;
