@@ -705,18 +705,29 @@ function createThorns(lane, z) {
     const thorns = new THREE.Group();
     thorns.userData = { type: 'obstacle', obstacleType: 'thorns' };
     
+    // Bright yellow base for high visibility
     const baseGeom = new THREE.BoxGeometry(1.5, 0.1, 1);
-    const baseMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    const baseMat = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
     const base = new THREE.Mesh(baseGeom, baseMat);
     base.position.y = 0.05;
     thorns.add(base);
     
+    // Yellow spikes with darker tips
     const spikeGeom = new THREE.ConeGeometry(0.08, 0.4, 6);
-    const spikeMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    const spikeMat = new THREE.MeshLambertMaterial({ color: 0xFFCC00 });
     for (let i = 0; i < 8; i++) {
         const spike = new THREE.Mesh(spikeGeom, spikeMat);
         spike.position.set(-0.5 + (i % 4) * 0.35, 0.25, -0.2 + Math.floor(i / 4) * 0.4);
         thorns.add(spike);
+    }
+    
+    // Add dark tips to spikes for contrast
+    const tipGeom = new THREE.ConeGeometry(0.04, 0.1, 6);
+    const tipMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    for (let i = 0; i < 8; i++) {
+        const tip = new THREE.Mesh(tipGeom, tipMat);
+        tip.position.set(-0.5 + (i % 4) * 0.35, 0.45, -0.2 + Math.floor(i / 4) * 0.4);
+        thorns.add(tip);
     }
     
     thorns.position.set(GAME_CONFIG.lanes[lane], 0, z);
@@ -1718,14 +1729,25 @@ function drawInstructionIcons() {
         const ctx = thornCanvas.getContext('2d');
         ctx.fillStyle = '#1a1a2e';
         ctx.fillRect(0, 0, 50, 50);
-        ctx.fillStyle = '#8B4513';
+        // Yellow base
+        ctx.fillStyle = '#FFD700';
         ctx.fillRect(5, 35, 40, 8);
-        ctx.fillStyle = '#dc3545';
+        // Yellow spikes
+        ctx.fillStyle = '#FFCC00';
         for (let i = 0; i < 5; i++) {
             ctx.beginPath();
             ctx.moveTo(10 + i * 8, 35);
             ctx.lineTo(14 + i * 8, 18);
             ctx.lineTo(18 + i * 8, 35);
+            ctx.fill();
+        }
+        // Dark tips on spikes
+        ctx.fillStyle = '#333333';
+        for (let i = 0; i < 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(12 + i * 8, 22);
+            ctx.lineTo(14 + i * 8, 18);
+            ctx.lineTo(16 + i * 8, 22);
             ctx.fill();
         }
     }
